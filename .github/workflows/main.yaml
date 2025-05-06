@@ -38,7 +38,7 @@ jobs:
       - name: 🛠️ Build the application
         run: flutter build web -t lib/main_production.dart
       - name: ⬇️ Archive Production Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: build
           path: build/web
