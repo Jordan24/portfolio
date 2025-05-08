@@ -4,6 +4,10 @@ void main() {
   runApp(const MyApp());
 }
 
+num add(num a, num b) {
+  return a + b;
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
