@@ -9,3 +9,7 @@ This site is designed to highlight expertise in different areas of Flutter app d
 ### Layout
 
 Scaffold, Toolbar and Floating Action Button
+
+### CI/CD
+
+Github Actions: Analyze, Build, Deploy
