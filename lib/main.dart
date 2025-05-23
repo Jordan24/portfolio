@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:ui';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +31,7 @@ class SharedPreferencesWithCache {
   // Set theme color in SharedPreferences and cache
   static Future<void> setThemeColor(Color color) async {
     final prefs = await getInstance();
-    await prefs.setInt('themeColor', color.value);
+    prefs.getInt('themeColor');
     _cachedColor = color;
   }
 
