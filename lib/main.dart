@@ -141,7 +141,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.color_lens),
+            icon: Icon(
+              Icons.color_lens,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            iconSize: 30.0,
             onPressed: _showColorPickerDialog,
             tooltip: 'Change Theme Color',
           ),
