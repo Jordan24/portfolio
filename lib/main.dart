@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,8 +9,21 @@ num add(num a, num b) {
   return a + b;
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Color _currentColor = const Color.fromARGB(255, 0, 32, 58);
+
+  void _updateThemeColor(Color newColor) {
+    setState(() {
+      _currentColor = newColor;
+    });
+  }
 
   // This widget is the root of your application.
   @override
@@ -34,16 +48,16 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color.fromARGB(255, 0, 32, 58),
+          seedColor: _currentColor,
         ),
       ),
-      home: const MyHomePage(title: 'Jordan Szymczyk - Portfolio Home Page'),
+      home: MyHomePage(title: 'Jordan Szymczyk - Portfolio Home Page', onThemeColorChanged: _updateThemeColor),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.onThemeColorChanged});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -55,6 +69,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final void Function(Color) onThemeColorChanged;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -62,6 +77,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  Color _pickerColor = Colors.blue; // Default color for the picker
 
   void _incrementCounter() {
     setState(() {
@@ -72,6 +88,38 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  void _showColorPickerDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _pickerColor,
+              onColorChanged: (Color color) {
+                setState(() => _pickerColor = color);
+              },
+              // enableAlpha: false, // Optional
+              // displayThumbColor: true, // Optional
+              // showLabel: true, // Optional
+              // pickerAreaHeightPercent: 0.8, // Optional
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                widget.onThemeColorChanged(_pickerColor);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -87,15 +135,22 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Color.fromARGB(255, 0, 32, 58),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, style: const TextStyle(color: Colors.white)),
+        title: Text(widget.title, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.color_lens),
+            onPressed: _showColorPickerDialog,
+            tooltip: 'Change Theme Color',
+          ),
+        ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Color.fromARGB(255, 0, 32, 58)],
+            colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.background],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -106,26 +161,30 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: _incrementCounter,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
                 child: const Text(
                   'Coming Soon',
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    // color: Colors.deepPurple, // Removed hardcoded color
                     fontWeight: FontWeight.bold,
                     fontSize: 28,
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'You have pushed the button this many times:',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20),
               ),
               Text(
                 '$_counter',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
-                  fontSize: 40,
-                ),
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 40,
+                    ),
               ),
             ],
           ),
