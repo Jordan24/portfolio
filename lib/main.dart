@@ -1,12 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 num add(num a, num b) {
   return a + b;
+}
+
+// Class to handle SharedPreferences with caching for theme color
+class SharedPreferencesWithCache {
+  static SharedPreferences? _prefsInstance;
+  static Color? _cachedColor;
+
+  @visibleForTesting
+  static void resetCache() {
+    _cachedColor = null;
+    _prefsInstance = null;
+  }
+
+  // Initialize SharedPreferences instance
+  static Future<SharedPreferences> getInstance() async {
+    _prefsInstance ??= await SharedPreferences.getInstance();
+    return _prefsInstance!;
+  }
+
+  // Set theme color in SharedPreferences and cache
+  static Future<void> setThemeColor(Color color) async {
+    final prefs = await getInstance();
+    await prefs.setInt('themeColor', color.value);
+    _cachedColor = color;
+  }
+
+  // Get theme color from cache or SharedPreferences
+  static Future<Color> getThemeColor() async {
+    if (_cachedColor != null) {
+      return _cachedColor!;
+    }
+
+    final prefs = await getInstance();
+    final colorValue = prefs.getInt('themeColor');
+
+    if (colorValue != null) {
+      _cachedColor = Color(colorValue);
+      return _cachedColor!;
+    } else {
+      // Default color if no theme is saved
+      return const Color.fromARGB(255, 0, 32, 58);
+    }
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -19,10 +65,24 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Color _currentColor = const Color.fromARGB(255, 0, 32, 58);
 
-  void _updateThemeColor(Color newColor) {
+  @override
+  void initState() {
+    super.initState();
+    _loadThemeColor();
+  }
+
+  Future<void> _loadThemeColor() async {
+    final color = await SharedPreferencesWithCache.getThemeColor();
+    setState(() {
+      _currentColor = color;
+    });
+  }
+
+  Future<void> _updateThemeColor(Color newColor) async {
     setState(() {
       _currentColor = newColor;
     });
+    await SharedPreferencesWithCache.setThemeColor(newColor);
   }
 
   // This widget is the root of your application.
