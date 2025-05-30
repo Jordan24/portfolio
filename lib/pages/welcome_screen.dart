@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/pages/portfolio_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({
@@ -92,7 +93,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     icon: const Icon(Icons.download),
                     label: const Text('Download Resume'),
                     onPressed: () {
-                      // TODO: Implement resume download functionality
+                      final url = Uri.parse(
+                        'https://drive.google.com/file/d/1GAUO2XpLyOgZrksryynVALqNbSPBTKVC/view?usp=drive_link',
+                      );
+                      launchUrl(url, mode: LaunchMode.externalApplication);
                     },
                   ),
                 ],
