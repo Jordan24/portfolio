@@ -28,6 +28,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     final onPrimary = theme.colorScheme.onPrimary;
     final inversePrimary = theme.colorScheme.inversePrimary;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWide = screenWidth > 600;
+    final double textSize = isWide ? 48 : 28;
+    final double spacingSize = isWide ? 48 : 28;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -48,6 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 'Built with ',
                 style: theme.textTheme.headlineMedium?.copyWith(
                   color: theme.colorScheme.primary,
+                  fontSize: textSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -61,7 +67,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         word,
                         speed: const Duration(milliseconds: 100),
                         textStyle: theme.textTheme.headlineMedium?.copyWith(
-                          color: theme.colorScheme.primary,
+                          color: theme.colorScheme.tertiary,
+                          fontSize: textSize,
                           fontWeight: FontWeight.bold,
                         ),
                       );
@@ -69,7 +76,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: spacingSize),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
