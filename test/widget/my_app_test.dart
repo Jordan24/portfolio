@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/pages/portfolio_screen.dart';
 
 void main() {
@@ -8,24 +9,19 @@ void main() {
   ) async {
     // Build the app and trigger a frame.
     await tester.pumpWidget(
-      PortfolioScreen(
-        title: '',
-        onThemeColorChanged: (Color color) {},
-        currentThemeColor: Colors.black,
+      const ProviderScope(child: MaterialApp(home: PortfolioScreen(title: '',
+          )),
       ),
     );
 
-    // Verify that a Button with the text "Push Me" is present.
     expect(find.widgetWithText(ElevatedButton, 'Coming Soon'), findsOneWidget);
   });
 
   testWidgets('AppBar IconButton has correct iconSize and color', (WidgetTester tester) async {
     // Build the app and trigger a frame.
     await tester.pumpWidget(
-      PortfolioScreen(
-        title: '',
-        onThemeColorChanged: (Color color) {},
-        currentThemeColor: Colors.black,
+      const ProviderScope(child: MaterialApp(home: PortfolioScreen(title: '',
+          )),
       ),
     );
 
