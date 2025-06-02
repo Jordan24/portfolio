@@ -1,29 +1,17 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/constants.dart';
 import 'package:portfolio/pages/portfolio_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({
-    super.key,
-    required this.onThemeColorChange,
-    required this.currentThemeColor,
-  });
+class WelcomeScreen extends ConsumerWidget {
+  const WelcomeScreen({super.key});
 
-  final void Function(Color) onThemeColorChange;
-  final Color currentThemeColor;
+  final List<String> animatedWords = const ['Flutter', 'Dart', 'Firebase'];
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen>
-    with SingleTickerProviderStateMixin {
-  final List<String> animatedWords = ['Flutter', 'Dart', 'Firebase'];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final onPrimary = theme.colorScheme.onPrimary;
     final inversePrimary = theme.colorScheme.inversePrimary;
@@ -86,12 +74,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder:
-                              (context) => PortfolioScreen(
-                                title: "Jordan's Portfolio",
-                                onThemeColorChanged: widget.onThemeColorChange,
-                                currentThemeColor: widget.currentThemeColor,
-                              ),
+                          builder: (context) => const PortfolioScreen(
+                            title: "Jordan's Portfolio",
+                          ),
                         ),
                       );
                     },

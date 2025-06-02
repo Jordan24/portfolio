@@ -1,46 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/pages/welcome_screen.dart';
+import 'package:portfolio/providers/theme_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 num add(num a, num b) {
   return a + b;
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  Color currentColor = const Color.fromARGB(255, 0, 32, 58);
-
-
-  void _updateThemeColor(Color newColor) {
-    setState(() {
-      currentColor = newColor;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeColor = ref.watch(themeColorProvider);
     return MaterialApp(
       title: 'Jordan Szymczyk - Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: currentColor,
+          seedColor: themeColor,
           brightness: Brightness.dark,
         ),
       ),
-      home: WelcomeScreen(
-        onThemeColorChange: _updateThemeColor,
-        currentThemeColor: currentColor,
-      ),
+      home: const WelcomeScreen(),
     );
   }
 }

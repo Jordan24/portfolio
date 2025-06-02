@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/providers/theme_provider.dart';
 
-class PortfolioScreen extends StatefulWidget {
+class PortfolioScreen extends ConsumerStatefulWidget {
   const PortfolioScreen({
     super.key,
     required this.title,
-    required this.onThemeColorChanged,
-    required this.currentThemeColor,
   });
   final String title;
-  final void Function(Color) onThemeColorChanged;
-  final Color currentThemeColor;
 
   @override
-  State<PortfolioScreen> createState() => _PortfolioScreenState();
+  ConsumerState<PortfolioScreen> createState() => _PortfolioScreenState();
 }
 
-class _PortfolioScreenState extends State<PortfolioScreen> {
+class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   int _counter = 0;
+  late Color _tempColor; // Temporary color for the dialog
 
   void _incrementCounter() {
     setState(() {
@@ -26,6 +25,8 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   }
 
   void _showColorPickerDialog() {
+    final currentThemeColor = ref.read(themeColorProvider);
+    _tempColor = currentThemeColor; // Initialize temp color
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -33,15 +34,18 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
           title: const Text('Pick a color'),
           content: SingleChildScrollView(
             child: BlockPicker(
-              pickerColor: widget.currentThemeColor,
-              onColorChanged: widget.onThemeColorChanged,
+              pickerColor: _tempColor,
+              onColorChanged: (color) {
+                // Update temp color, not the provider directly
+                _tempColor = color;
+              },
             ),
           ),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                widget.onThemeColorChanged(widget.currentThemeColor);
+                ref.read(themeColorProvider.notifier).setColor(_tempColor);
                 Navigator.of(context).pop();
               },
             ),
@@ -53,10 +57,11 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentThemeColor = ref.watch(themeColorProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: widget.currentThemeColor),
+        colorScheme: ColorScheme.fromSeed(seedColor: currentThemeColor),
       ),
       home: Scaffold(
         appBar: AppBar(
