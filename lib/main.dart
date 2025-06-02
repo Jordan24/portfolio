@@ -19,6 +19,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Color currentColor = const Color.fromARGB(255, 0, 32, 58);
 
+
   void _updateThemeColor(Color newColor) {
     setState(() {
       currentColor = newColor;
@@ -31,7 +32,10 @@ class _MyAppState extends State<MyApp> {
       title: 'Jordan Szymczyk - Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: currentColor),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: currentColor,
+          brightness: Brightness.dark,
+        ),
       ),
       home: WelcomeScreen(
         onThemeColorChange: _updateThemeColor,

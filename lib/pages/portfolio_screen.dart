@@ -106,9 +106,18 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                 const SizedBox(height: 20),
                 Text(
                   'You have pushed the button this many times:',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
-                Text('$_counter', style: TextStyle(fontSize: 40)),
+                Text(
+                  '$_counter',
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
               ],
             ),
           ),
