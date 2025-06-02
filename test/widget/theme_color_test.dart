@@ -58,7 +58,7 @@ void main() {
     // Colors.red is F44336. Let's find a widget representing this.
     // BlockPicker lays out colors in a grid. We'll find the specific color swatch.
     // Note: BlockPicker uses Color objects directly for its swatches.
-    
+
     // Find the BlockPicker widget
     final blockPicker = find.byType(BlockPicker);
     expect(blockPicker, findsOneWidget);
@@ -85,7 +85,7 @@ void main() {
           return false;
         }),
       );
-      
+
       // Check if the color container was found before trying to find its ancestor
       if (tester.any(colorContainerFinder)) {
         return find.ancestor(of: colorContainerFinder.first, matching: find.byType(GestureDetector));
@@ -96,35 +96,31 @@ void main() {
 
     Finder redSwatchGestureDetector = findColorSwatchGestureDetector(newTestColor);
 
-    if (await tester.pumpAndSettle() > 0 && tester.any(redSwatchGestureDetector)) {
-      print("Attempting to tap Colors.red swatch.");
+      if (await tester.pumpAndSettle() > 0 &&
+          tester.any(redSwatchGestureDetector)) {
       await tester.tap(redSwatchGestureDetector);
       await tester.pump();
       specificColorTapped = true;
-    } else {
-      print("Warning: Colors.red swatch not found or not tappable. Attempting to tap Colors.blue swatch.");
+      } else {
       colorToTap = Colors.blue; // Fallback color
       Finder blueSwatchGestureDetector = findColorSwatchGestureDetector(colorToTap);
 
-      if (await tester.pumpAndSettle() > 0 && tester.any(blueSwatchGestureDetector)) {
-        print("Attempting to tap Colors.blue swatch.");
+        if (await tester.pumpAndSettle() > 0 &&
+            tester.any(blueSwatchGestureDetector)) {
         await tester.tap(blueSwatchGestureDetector);
         await tester.pump();
         specificColorTapped = true;
-      } else {
-        print("Warning: Colors.blue swatch also not found or not tappable. Tapping the first available GestureDetector.");
+        } else {
         final anyColorSwatchGestureDetector = find.descendant(of: blockPicker, matching: find.byType(GestureDetector));
         if (await tester.pumpAndSettle() > 0 && tester.any(anyColorSwatchGestureDetector)) {
           await tester.tap(anyColorSwatchGestureDetector.first);
           await tester.pump();
           // When tapping 'any' color, we don't know what color 'colorToTap' should be for assertion.
           // So, we will read it from the provider after 'OK' is tapped.
-          // For now, specificColorTapped remains true, but colorToTap is still blue. This will be adjusted.
-          print("Tapped first available swatch. Actual color picked will be read from provider for assertion.");
+            // For now, specificColorTapped remains true, but colorToTap is still blue. This will be adjusted.
           specificColorTapped = true; // We did tap a color.
           // We will update colorToTap after pressing OK by reading from provider.
-        } else {
-          print("Error: No color swatches (GestureDetectors) found in BlockPicker.");
+          } else {
           specificColorTapped = false; // No color was tapped.
         }
       }
@@ -143,7 +139,6 @@ void main() {
         // In this specific case, we should read the actual color from the provider.
         final container = ProviderScope.containerOf(tester.element(find.byType(MyApp)));
         colorToTap = container.read(themeColorProvider);
-        print("Updated colorToTap for assertion to the actual picked color: $colorToTap");
     }
 
 
