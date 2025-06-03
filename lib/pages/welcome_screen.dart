@@ -74,9 +74,10 @@ class WelcomeScreen extends ConsumerWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const PortfolioScreen(
-                            title: "Jordan's Portfolio",
-                          ),
+                          builder:
+                              (context) => const PortfolioScreen(
+                                title: "Jordan's Portfolio",
+                              ),
                         ),
                       );
                     },

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/providers/theme_mode_provider.dart';
 import 'package:portfolio/providers/theme_provider.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
-  const PortfolioScreen({
-    super.key,
-    required this.title,
-  });
+  const PortfolioScreen({super.key, required this.title});
   final String title;
 
   @override
@@ -16,7 +14,7 @@ class PortfolioScreen extends ConsumerStatefulWidget {
 
 class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   int _counter = 0;
-  late Color _tempColor; // Temporary color for the dialog
+  late Color _tempColor;
 
   void _incrementCounter() {
     setState(() {
@@ -25,8 +23,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   }
 
   void _showColorPickerDialog() {
-    final currentThemeColor = ref.read(themeColorProvider);
-    _tempColor = currentThemeColor; // Initialize temp color
+    final currentThemeColor = ref.watch(themeColorProvider);
+    _tempColor = currentThemeColor;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -36,7 +34,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             child: BlockPicker(
               pickerColor: _tempColor,
               onColorChanged: (color) {
-                // Update temp color, not the provider directly
                 _tempColor = color;
               },
             ),
@@ -57,81 +54,64 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentThemeColor = ref.watch(themeColorProvider);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: currentThemeColor),
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(
-            widget.title,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+    final ref = this.ref;
+    final theme = Theme.of(context);
+    final isDarkMode = ref.watch(themeModeProvider) == ThemeMode.dark;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            iconSize: 30.0,
+            color: theme.colorScheme.onPrimary,
+            onPressed: () {
+              ref.read(themeModeProvider.notifier).toggleTheme();
+            },
+            tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.color_lens,
-                color: Theme.of(context).colorScheme.onPrimary,
+          IconButton(
+            icon: Icon(Icons.color_lens),
+            color: theme.colorScheme.onPrimary,
+            iconSize: 30.0,
+            onPressed: _showColorPickerDialog,
+            tooltip: 'Change Theme Color',
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: _incrementCounter,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
               ),
-              iconSize: 30.0,
-              onPressed: _showColorPickerDialog,
-              tooltip: 'Change Theme Color',
+              child: const Text(
+                'Coming Soon',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+              ),
             ),
+            const SizedBox(height: 20),
+            Text(
+              'You have pushed the button this many times:',
+              style: TextStyle(fontSize: 20),
+            ),
+            Text('$_counter', style: TextStyle(fontSize: 40)),
           ],
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).colorScheme.surface,
-                Theme.of(context).colorScheme.surface,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: _incrementCounter,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  child: const Text(
-                    'Coming Soon',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'You have pushed the button this many times:',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                Text(
-                  '$_counter',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }

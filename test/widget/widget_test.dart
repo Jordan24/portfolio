@@ -15,7 +15,14 @@ void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
-      const ProviderScope(child: PortfolioScreen(title: 'Test Portfolio',
+      ProviderScope(
+        child: MaterialApp(
+          home: Navigator(
+            onGenerateRoute:
+                (_) => MaterialPageRoute(
+                  builder: (_) => PortfolioScreen(title: 'Portfolio Screen'),
+                ),
+          ),
         ),
       ),
     );

@@ -12,30 +12,67 @@ void main() {
   const newTestColor = Colors.red;
 
   testWidgets('Test 1: Initial Theme Color is applied correctly', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+    // Build the app starting from WelcomeScreen (as in production)
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MyApp(),
+      ProviderScope(
+        child: MaterialApp(
+          home: Navigator(
+            onGenerateRoute:
+                (_) => MaterialPageRoute(builder: (_) => WelcomeScreen()),
+          ),
+        ),
       ),
     );
 
-    // Verify the themeColorProvider has the initial color.
-    final container = ProviderScope.containerOf(tester.element(find.byType(MyApp)));
+    // 1. Navigate from WelcomeScreen to PortfolioScreen
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.work));
+    await tester.pumpAndSettle();
+    expect(find.byType(PortfolioScreen), findsOneWidget);
+
+    // 2. Verify the themeColorProvider has the initial color.
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(PortfolioScreen)),
+    );
     expect(container.read(themeColorProvider), initialColor);
 
-    // Verify MyApp's MaterialApp theme has the correct initial primary color.
+    // 3. Verify MyApp's MaterialApp theme has the correct initial primary color.
     final myAppMaterialApp = tester.widget<MaterialApp>(find.byType(MaterialApp).first);
-    final expectedMyAppColorScheme = ColorScheme.fromSeed(seedColor: initialColor, brightness: Brightness.dark);
+    final expectedMyAppColorScheme = ColorScheme.fromSeed(
+      seedColor: initialColor,
+      brightness: Brightness.dark,
+    );
     expect(myAppMaterialApp.theme?.colorScheme.primary, expectedMyAppColorScheme.primary);
+
+    // 4. Verify PortfolioScreen's MaterialApp theme has the correct initial primary color.
+    final portfolioScreenMaterialApp = tester.widget<MaterialApp>(
+      find.descendant(
+        of: find.byType(PortfolioScreen),
+        matching: find.byType(MaterialApp),
+      ),
+    );
+    final expectedPortfolioColorScheme = ColorScheme.fromSeed(
+      seedColor: initialColor,
+      brightness: Brightness.light,
+    );
+    expect(
+      portfolioScreenMaterialApp.theme?.colorScheme.primary,
+      expectedPortfolioColorScheme.primary,
+    );
   });
 
   testWidgets('Test 2: Theme Color Change from PortfolioScreen updates providers and themes', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MyApp(),
-      ),
-    );
+        ProviderScope(
+          child: MaterialApp(
+            home: Navigator(
+              onGenerateRoute:
+                  (_) => MaterialPageRoute(builder: (_) => WelcomeScreen()),
+            ),
+          ),
+        ),
+      );
 
     // 1. Navigate from WelcomeScreen to PortfolioScreen
     expect(find.byType(WelcomeScreen), findsOneWidget);
@@ -137,14 +174,18 @@ void main() {
         // if the "anyColorSwatchGestureDetector" was tapped.
         // The print "Tapped first available swatch..." indicates this path.
         // In this specific case, we should read the actual color from the provider.
-        final container = ProviderScope.containerOf(tester.element(find.byType(MyApp)));
+        final container = ProviderScope.containerOf(
+          tester.element(find.byType(PortfolioScreen)),
+        );
         colorToTap = container.read(themeColorProvider);
     }
 
 
     // 5. Verify themeColorProvider's state (only if a specific color was successfully tapped or an unknown color was tapped)
     if (specificColorTapped) {
-      final container = ProviderScope.containerOf(tester.element(find.byType(MyApp)));
+        final container = ProviderScope.containerOf(
+          tester.element(find.byType(PortfolioScreen)),
+        );
       expect(container.read(themeColorProvider), colorToTap);
 
       // 6. Verify MyApp's MaterialApp theme reflects the change
