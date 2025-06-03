@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
 import 'package:portfolio/providers/theme_provider.dart';
@@ -31,11 +31,12 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         return AlertDialog(
           title: const Text('Pick a color'),
           content: SingleChildScrollView(
-            child: BlockPicker(
-              pickerColor: _tempColor,
-              onColorChanged: (color) {
-                _tempColor = color;
-              },
+            child: MaterialColorPicker(
+              colors: Colors.primaries,
+              allowShades: false,
+              selectedColor: currentThemeColor,
+              onMainColorChange:
+                  (color) => setState(() => _tempColor = color as Color),
             ),
           ),
           actions: <Widget>[
