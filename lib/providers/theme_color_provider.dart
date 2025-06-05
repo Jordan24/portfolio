@@ -7,10 +7,6 @@ class ThemeColorNotifier extends StateNotifier<Color> {
   void setColor(Color color) {
     state = color;
   }
-
-  void setDarkMOde() {
-    state = const Color.fromARGB(255, 0, 32, 58);
-  }
 }
 
 final themeColorProvider = StateNotifierProvider<ThemeColorNotifier, Color>((

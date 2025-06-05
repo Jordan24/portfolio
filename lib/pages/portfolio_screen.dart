@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
-import 'package:portfolio/providers/theme_provider.dart';
+import 'package:portfolio/providers/theme_color_provider.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
   const PortfolioScreen({super.key, required this.title});

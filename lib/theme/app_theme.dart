@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  AppTheme({required this.currentThemeColor});
+  static ThemeData light(Color seedColor) {
+    final colorScheme = ColorScheme.fromSeed(
+      brightness: Brightness.light,
+      seedColor: seedColor,
+    );
+    return ThemeData(
+      colorScheme: colorScheme,
+      appBarTheme: AppBarTheme(foregroundColor: colorScheme.onPrimary),
+    );
+  }
 
-  final Color currentThemeColor;
-
-  static ThemeData lightMode = ThemeData(
-    brightness: Brightness.light,
-    appBarTheme: AppBarTheme(
-      foregroundColor: ThemeData.dark().colorScheme.onSurface,
-    ),
-  );
-
-  static ThemeData darkMode = ThemeData(
-    brightness: Brightness.dark,
-    appBarTheme: AppBarTheme(
-      foregroundColor: ThemeData.dark().colorScheme.onPrimary,
-    ),
-  );
+  static ThemeData dark(Color seedColor) {
+    final colorScheme = ColorScheme.fromSeed(
+      brightness: Brightness.dark,
+      seedColor: seedColor,
+    );
+    return ThemeData(
+      colorScheme: colorScheme,
+      appBarTheme: AppBarTheme(foregroundColor: colorScheme.onSecondary),
+    );
+  }
 }
