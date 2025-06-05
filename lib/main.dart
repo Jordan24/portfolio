@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/pages/welcome_screen.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
-import 'package:portfolio/providers/theme_provider.dart';
+import 'package:portfolio/providers/theme_color_provider.dart';
 import 'package:portfolio/theme/app_theme.dart';
 
 void main() {
