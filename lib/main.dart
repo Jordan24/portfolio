@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/pages/welcome_screen.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
 import 'package:portfolio/providers/theme_color_provider.dart';
-import 'package:portfolio/theme/app_theme.dart';
+import 'package:portfolio/theme/color_scheme.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -20,21 +20,12 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeColor = ref.watch(themeColorProvider);
     final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp(
       title: 'Jordan Szymczyk - Portfolio',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightMode.copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.light,
-          seedColor: themeColor,
-        ),
-      ),
-      darkTheme: AppTheme.darkMode.copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: themeColor,
-        ),
-      ),
+      theme: AppTheme.light(themeColor),
+      darkTheme: AppTheme.dark(themeColor),
       themeMode: themeMode,
       home: const WelcomeScreen(),
     );
