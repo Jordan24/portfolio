@@ -5,7 +5,7 @@ class AppTheme {
 
   final Color currentThemeColor;
 
-  static ThemeData lightMode = ThemeData(
+  static ThemeData lightMode = ThemeData().copyWith(
     brightness: Brightness.light,
     appBarTheme: AppBarTheme(
       foregroundColor: ThemeData.dark().colorScheme.onSurface,
