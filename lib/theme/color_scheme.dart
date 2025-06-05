@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
-class KColorScheme {
-  Color seedColor;
-
-  KColorScheme() : seedColor = Colors.blueGrey;
-
-  get kLightColorScheme {
-    return ColorScheme.fromSeed(
+class AppTheme {
+  static ThemeData light(Color seedColor) {
+    final colorScheme = ColorScheme.fromSeed(
       brightness: Brightness.light,
       seedColor: seedColor,
     );
+    return ThemeData(
+      colorScheme: colorScheme,
+      appBarTheme: AppBarTheme(foregroundColor: colorScheme.onPrimary),
+    );
   }
 
-  get kDarkColorScheme {
-    return ColorScheme.fromSeed(
+  static ThemeData dark(Color seedColor) {
+    final colorScheme = ColorScheme.fromSeed(
       brightness: Brightness.dark,
       seedColor: seedColor,
+    );
+    return ThemeData(
+      colorScheme: colorScheme,
+      appBarTheme: AppBarTheme(foregroundColor: colorScheme.onSecondary),
     );
   }
 }
