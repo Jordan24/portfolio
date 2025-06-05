@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   ThemeModeNotifier([super.initialMode = ThemeMode.system]);
 
-  void toggleTheme() {
-    state = state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+  void setThemeMode(ThemeMode newMode) {
+    state = newMode;
   }
 }
 

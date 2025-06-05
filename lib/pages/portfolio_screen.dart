@@ -57,7 +57,14 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   Widget build(BuildContext context) {
     final ref = this.ref;
     final theme = Theme.of(context);
-    final isDarkMode = ref.watch(themeModeProvider) == ThemeMode.dark;
+    final themeMode = ref.watch(themeModeProvider);
+    final themeModeNotifier = ref.read(themeModeProvider.notifier);
+    final systemIsDark =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final isDarkMode =
+        themeMode == ThemeMode.system
+            ? systemIsDark
+            : themeMode == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +79,11 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             iconSize: 30.0,
             color: theme.colorScheme.onPrimary,
             onPressed: () {
-              ref.read(themeModeProvider.notifier).toggleTheme();
+              if (isDarkMode) {
+                themeModeNotifier.setThemeMode(ThemeMode.light);
+              } else {
+                themeModeNotifier.setThemeMode(ThemeMode.dark);
+              }
             },
             tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
           ),
