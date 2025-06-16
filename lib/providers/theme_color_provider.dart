@@ -14,7 +14,7 @@ class ThemeColorNotifier extends StateNotifier<Color> {
 
   Future<void> _saveThemeColor(Color color) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('theme_color', color.value);
+    await prefs.setInt('theme_color', color.toARGB32());
   }
 
   ThemeColorNotifier() : super(const Color.fromARGB(255, 0, 32, 58)) {
