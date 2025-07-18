@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:portfolio/pages/portfolio_screen.dart';
+import 'package:portfolio/screens/portfolio_screen.dart';
 
 void main() {
   testWidgets('Finds a Button with text "Coming Soon"', (
@@ -14,7 +14,7 @@ void main() {
           home: Navigator(
             onGenerateRoute:
                 (_) => MaterialPageRoute(
-                  builder: (_) => PortfolioScreen(title: ''),
+                  builder: (_) => PortfolioScreen(),
                 ),),
           ),
         ),
@@ -32,7 +32,7 @@ void main() {
           home: Navigator(
             onGenerateRoute:
                 (_) => MaterialPageRoute(
-                  builder: (_) => PortfolioScreen(title: ''),
+                  builder: (_) => PortfolioScreen(),
                 ),
           ),
         ),

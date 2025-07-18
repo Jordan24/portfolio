@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/constants.dart';
-import 'package:portfolio/pages/portfolio_screen.dart';
+import 'package:portfolio/screens/portfolio_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WelcomeScreen extends ConsumerWidget {
@@ -74,10 +74,7 @@ class WelcomeScreen extends ConsumerWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder:
-                              (context) => const PortfolioScreen(
-                                title: "Jordan's Portfolio",
-                              ),
+                          builder: (context) => const PortfolioScreen(),
                         ),
                       );
                     },
