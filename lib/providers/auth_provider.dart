@@ -14,8 +14,12 @@ class AuthNotifier extends StateNotifier<bool> {
         email: email,
         password: password,
       );
-    } catch (e) {
-      // Handle error
+    } on FirebaseAuthException catch (error) {
+      print('Sign-in error: ${error.message}');
+      throw FirebaseAuthException(
+        code: error.code,
+        message: error.message ?? 'Authentication failed.',
+      );
     }
   }
 
@@ -25,8 +29,12 @@ class AuthNotifier extends StateNotifier<bool> {
         email: email,
         password: password,
       );
-    } catch (e) {
-      // Handle error
+    } on FirebaseAuthException catch (error) {
+      print('Sign-up error: $error');
+      throw FirebaseAuthException(
+        code: error.code,
+        message: error.message ?? 'Authentication failed.',
+      );
     }
   }
 
