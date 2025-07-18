@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/providers/auth_provider.dart';
 import 'package:portfolio/validators/email_validator.dart';
 import 'package:portfolio/validators/password_validator.dart';
 
-final _firebase = FirebaseAuth.instance;
-
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _form = GlobalKey<FormState>();
 
   var _isLogin = true;
@@ -26,31 +25,20 @@ class _AuthScreenState extends State<AuthScreen> {
 
     _form.currentState!.save();
 
+    final authNotifier = ref.read(authProvider.notifier);
+
     try {
       if (_isLogin) {
-        // Handle login logic
-        await _firebase.signInWithEmailAndPassword(
-          email: _enteredEmail,
-          password: _enteredPassword,
-        );
-        if (mounted) Navigator.of(context).pop();
+        await authNotifier.signIn(_enteredEmail, _enteredPassword);
       } else {
-        // Handle signup logic
-        await _firebase.createUserWithEmailAndPassword(
-          email: _enteredEmail,
-          password: _enteredPassword,
-        );
-        await _firebase.signInWithEmailAndPassword(
-          email: _enteredEmail,
-          password: _enteredPassword,
-        );
-        if (mounted) Navigator.of(context).pop();
+        await authNotifier.signUp(_enteredEmail, _enteredPassword);
       }
-    } on FirebaseAuthException catch (error) {
+      if (mounted) Navigator.of(context).pop();
+    } catch (error) {
       if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message ?? 'Authentication failed.')),
+          SnackBar(content: Text(error.toString())),
         );
       }
     }
@@ -83,11 +71,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           keyboardType: TextInputType.emailAddress,
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
-                          validator:
-                              (email) =>
-                                  isValidEmail(email)
-                                      ? null
-                                      : 'Please enter a valid email address.',
+                          validator: (email) => isValidEmail(email)
+                              ? null
+                              : 'Please enter a valid email address.',
                           onSaved: (value) {
                             _enteredEmail = value!.trim();
                           },
@@ -98,11 +84,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             labelText: 'Password',
                           ),
                           obscureText: true,
-                          validator:
-                              (password) =>
-                                  isValidPassword(password)
-                                      ? null
-                                      : 'Password must be at least 8 characters long.',
+                          validator: (password) => isValidPassword(password)
+                              ? null
+                              : 'Password must be at least 8 characters long.',
                           onSaved: (value) {
                             _enteredPassword = value!.trim();
                           },

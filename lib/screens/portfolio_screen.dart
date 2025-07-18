@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/providers/auth_provider.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
 import 'package:portfolio/providers/theme_color_provider.dart';
 import 'package:portfolio/screens/auth_screen.dart';
@@ -95,23 +95,22 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             onPressed: _showColorPickerDialog,
             tooltip: 'Change Theme Color',
           ),
-          StreamBuilder(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                final isLoggedIn = snapshot.hasData;
-                return TextButton(
-                  onPressed: isLoggedIn
-                      ? () => FirebaseAuth.instance.signOut()
-                      : () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const AuthScreen()),
-                          );
-                        },
-                  child: Text(isLoggedIn ? 'Logout' : 'Login',
-                      style: TextStyle(color: theme.colorScheme.onPrimary)),
-                );
-              }),
+          Consumer(builder: (context, ref, child) {
+            final isLoggedIn = ref.watch(authProvider);
+            final authNotifier = ref.read(authProvider.notifier);
+            return TextButton(
+              onPressed: isLoggedIn
+                  ? () => authNotifier.signOut()
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AuthScreen()),
+                      );
+                    },
+              child: Text(isLoggedIn ? 'Logout' : 'Login',
+                  style: TextStyle(color: theme.colorScheme.onPrimary)),
+            );
+          }),
         ],
       ),
       body: Center(
