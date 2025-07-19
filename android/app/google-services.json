@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "607049339701",
+    "project_id": "jordan-szymczyk-portfolio",
+    "storage_bucket": "jordan-szymczyk-portfolio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607049339701:android:f03e9f8355d91916e4327c",
+        "android_client_info": {
+          "package_name": "com.example.portfolio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZfTSXo2Ya3R_1T5NgRIcMd32-gYhWFuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
