@@ -1,11 +1,17 @@
+import 'firebase_options.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:portfolio/pages/welcome_screen.dart';
+
+import 'package:portfolio/screens/welcome_screen.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
 import 'package:portfolio/providers/theme_color_provider.dart';
 import 'package:portfolio/theme/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: PortfolioApp()));
 }
 

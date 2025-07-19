@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/providers/auth_provider.dart';
 import 'package:portfolio/providers/theme_mode_provider.dart';
 import 'package:portfolio/providers/theme_color_provider.dart';
+import 'package:portfolio/screens/auth_screen.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
-  const PortfolioScreen({super.key, required this.title});
-  final String title;
+  const PortfolioScreen({super.key});
 
   @override
   ConsumerState<PortfolioScreen> createState() => _PortfolioScreenState();
@@ -70,7 +71,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
-          widget.title,
+          "Jordan's Portfolio",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         actions: <Widget>[
@@ -94,6 +95,22 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             onPressed: _showColorPickerDialog,
             tooltip: 'Change Theme Color',
           ),
+          Consumer(builder: (context, ref, child) {
+            final isLoggedIn = ref.watch(authProvider);
+            final authNotifier = ref.read(authProvider.notifier);
+            return TextButton(
+              onPressed: isLoggedIn
+                  ? () => authNotifier.signOut()
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AuthScreen()),
+                      );
+                    },
+              child: Text(isLoggedIn ? 'Logout' : 'Login',
+                  style: TextStyle(color: theme.colorScheme.onPrimary)),
+            );
+          }),
         ],
       ),
       body: Center(
