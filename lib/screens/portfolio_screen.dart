@@ -114,27 +114,42 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: _incrementCounter,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: theme.colorScheme.onPrimary,
-              ),
-              child: const Text(
-                'Coming Soon',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(fontSize: 20),
-            ),
-            Text('$_counter', style: TextStyle(fontSize: 40)),
-          ],
+        child: Consumer(
+          builder: (context, ref, _) {
+            final isLoggedIn = ref.watch(authProvider);
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  isLoggedIn
+                      ? 'You are logged in!'
+                      : 'Please log in at top right',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _incrementCounter,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                  ),
+                  child: const Text(
+                    'Coming Soon',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'You have pushed the button this many times:',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text('$_counter', style: TextStyle(fontSize: 40)),
+              ],
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
