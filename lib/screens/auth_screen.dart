@@ -55,65 +55,73 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Center(
-            child: Card(
-              margin: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Form(
-                    key: _form,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Email Address',
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 400),
+              child: Card(
+                margin: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Form(
+                      key: _form,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 12,
+                        children: [
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Email Address',
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator:
+                                (email) =>
+                                    isValidEmail(email)
+                                        ? null
+                                        : 'Please enter a valid email address.',
+                            onSaved: (value) {
+                              _enteredEmail = value!.trim();
+                            },
                           ),
-                          keyboardType: TextInputType.emailAddress,
-                          autocorrect: false,
-                          textCapitalization: TextCapitalization.none,
-                          validator: (email) => isValidEmail(email)
-                              ? null
-                              : 'Please enter a valid email address.',
-                          onSaved: (value) {
-                            _enteredEmail = value!.trim();
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                            ),
+                            obscureText: true,
+                            validator:
+                                (password) =>
+                                    isValidPassword(password)
+                                        ? null
+                                        : 'Password must be at least 8 characters long.',
+                            onSaved: (value) {
+                              _enteredPassword = value!.trim();
+                            },
                           ),
-                          obscureText: true,
-                          validator: (password) => isValidPassword(password)
-                              ? null
-                              : 'Password must be at least 8 characters long.',
-                          onSaved: (value) {
-                            _enteredPassword = value!.trim();
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _submit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
+                          ElevatedButton(
+                            onPressed: _submit,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                            ),
+                            child: Text(_isLogin ? 'Login' : 'Signup'),
                           ),
-                          child: Text(_isLogin ? 'Login' : 'Signup'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
-                          },
-                          child: Text(
-                            _isLogin
-                                ? 'Create new account'
-                                : 'I already have an account',
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _isLogin = !_isLogin;
+                              });
+                            },
+                            child: Text(
+                              _isLogin
+                                  ? 'Create new account'
+                                  : 'I already have an account',
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
