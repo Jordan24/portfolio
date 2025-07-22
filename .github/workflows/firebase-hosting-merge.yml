@@ -21,6 +21,6 @@ jobs:
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{
-            secrets.FIREBASE_SERVICE_ACCOUNT_JORDAN_SZYMCZYK_PORTFOLI_C3A24 }}
+            secrets.FIREBASE_SERVICE_ACCOUNT_JORDAN_SZYMCZYK }}
           channelId: live
-          projectId: jordan-szymczyk-portfoli-c3a24
+          projectId: jordan-szymczyk
