@@ -72,4 +72,4 @@ lib/
 - Must be well-maintained, compatible, performant, and support SoC.
 
 ## 6. API Keys and secrets
-- Always store API Keys and other secrets in the .env file.
+- Always store API Keys and other secrets in the .env file. Obfuscate keys and secrets.
