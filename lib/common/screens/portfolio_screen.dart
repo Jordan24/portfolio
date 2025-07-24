@@ -5,6 +5,7 @@ import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
+import 'package:portfolio/user/screens/profile_screen.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
   const PortfolioScreen({super.key});
@@ -91,11 +92,16 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           Consumer(
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authProvider);
-              final authNotifier = ref.read(authProvider.notifier);
               return TextButton(
                 onPressed:
                     isLoggedIn
-                        ? () => authNotifier.signOut()
+                        ? () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ProfileScreen(),
+                            ),
+                          );
+                        }
                         : () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -104,7 +110,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                           );
                         },
                 child: Text(
-                  isLoggedIn ? 'Logout' : 'Login',
+                  isLoggedIn ? 'Profile' : 'Login',
                   style: TextStyle(color: theme.colorScheme.onPrimary),
                 ),
               );
@@ -148,7 +154,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
               ],
             );
           },
