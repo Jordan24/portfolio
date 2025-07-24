@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/user/validators/email_validator.dart';
+import 'package:portfolio/user/validators/username_validator.dart';
 import 'package:portfolio/user/validators/password_validator.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -23,6 +24,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
+  var _enteredUsername = '';
 
   @override
   void initState() {
@@ -53,7 +55,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       if (_isLogin) {
         await authNotifier.signIn(_enteredEmail, _enteredPassword);
       } else {
-        await authNotifier.signUp(_enteredEmail, _enteredPassword);
+        await authNotifier.signUp(
+          _enteredEmail,
+          _enteredPassword,
+          _enteredUsername,
+        );
       }
       if (mounted) Navigator.of(context).pop();
     } on FirebaseAuthException catch (error) {
@@ -99,16 +105,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (!isFront)
+                  TextFormField(
+                    decoration: const InputDecoration(labelText: 'Username'),
+                    enableSuggestions: false,
+                    validator: (value) => validateUsername(value),
+                    onSaved: (value) {
+                      _enteredUsername = value!.trim();
+                    },
+                  ),
+                if (!isFront) const SizedBox(height: 12),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Email Address'),
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   textCapitalization: TextCapitalization.none,
                   validator:
-                      (email) =>
-                          isValidEmail(email)
-                              ? null
-                              : 'Please enter a valid email address.',
+                      (email) => isValidEmail(email),
                   onSaved: (value) {
                     _enteredEmail = value!.trim();
                   },
@@ -118,10 +131,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
                   validator:
-                      (password) =>
-                          isValidPassword(password)
-                              ? null
-                              : 'Password must be at least 8 characters long.',
+                      (password) => isValidPassword(password),
                   onFieldSubmitted: (_) => _submit(),
                   onSaved: (value) {
                     _enteredPassword = value!.trim();

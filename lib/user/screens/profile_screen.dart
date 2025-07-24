@@ -1,26 +1,25 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/user/models/user.dart' as model;
+import 'package:portfolio/user/providers/auth_provider.dart';
+import 'package:portfolio/user/validators/email_validator.dart';
+import 'package:portfolio/user/validators/username_validator.dart';
 import 'package:portfolio/user/widgets/user_image_picker.dart';
 
-final _firebase = FirebaseAuth.instance;
-
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  final userCredentials = _firebase.currentUser;
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _form = GlobalKey<FormState>();
-  var _enteredUsername = '';
-  var _enteredEmail = '';
-  var _imageUrl = '';
+  String? _enteredUsername;
+  String? _enteredEmail;
   File? _selectedImage;
   var _isSaving = false;
 
@@ -31,44 +30,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     _form.currentState!.save();
 
-    try {
-      setState(() {
-        _isSaving = true;
-      });
+    setState(() {
+      _isSaving = true;
+    });
 
-      // Handle signup logic
-      if (_selectedImage != null) {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child('${userCredentials!.uid}.jpg');
-        await storageRef.putFile(_selectedImage!);
-        _imageUrl = await storageRef.getDownloadURL();
-      }
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredentials!.uid)
-          .set({
-            'username': _enteredUsername,
-            'email': _enteredEmail,
-            'image_url': _imageUrl,
-          });
-    } on FirebaseAuthException catch (error) {
+    final user = ref.read(authProvider)!;
+    String? imageUrl = user.imageUrl;
+
+    if (_selectedImage != null) {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child('${user.id}.jpg');
+      await storageRef.putFile(_selectedImage!);
+      imageUrl = await storageRef.getDownloadURL();
+    }
+
+    final updatedUser = model.User(
+      id: user.id,
+      username: _enteredUsername,
+      email: _enteredEmail ?? user.email,
+      imageUrl: imageUrl,
+    );
+
+    try {
+      await ref.read(authProvider.notifier).updateUserData(updatedUser);
+    } catch (error) {
       if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message ?? 'Authentication failed.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
       }
-      setState(() {
-        _isSaving = false;
-      });
+    }
+
+    setState(() {
+      _isSaving = false;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+      Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(authProvider);
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -80,14 +92,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _isSaving
               ? CircularProgressIndicator(
                 color: theme.colorScheme.onPrimary,
-                constraints: BoxConstraints(minWidth: 24, minHeight: 24),
+                constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
               )
               : TextButton.icon(
                 onPressed: _submit,
                 icon: Icon(Icons.save, color: theme.colorScheme.onPrimary),
                 label: Text(
                   'Save',
-                  style: TextStyle(color: theme.colorScheme.onPrimary, fontSize: 20),
+                  style: TextStyle(
+                    color: theme.colorScheme.onPrimary,
+                    fontSize: 20,
+                  ),
                 ),
               ),
           const SizedBox(width: 12),
@@ -108,34 +123,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPickImage: (pickedImage) {
                     _selectedImage = pickedImage;
                   },
+                  imageUrl: user?.imageUrl,
                 ),
                 TextFormField(
+                  initialValue: user?.email,
                   decoration: const InputDecoration(labelText: 'Email Address'),
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   textCapitalization: TextCapitalization.none,
-                  validator:
-                      (value) =>
-                          value == null ||
-                                  value.trim().isEmpty ||
-                                  !value.contains('@')
-                              ? 'Please enter a valid email address.'
-                              : null,
+                  validator: (value) => isValidEmail(value),
                   onSaved: (value) {
-                    _enteredEmail = value!.trim();
+                    _enteredEmail = value?.trim();
                   },
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
+                  initialValue: user?.username,
                   decoration: const InputDecoration(labelText: 'Username'),
                   enableSuggestions: false,
-                  validator:
-                      (value) =>
-                          value == null || value.trim().length < 2
-                              ? 'Password must be at least 2 characters long.'
-                              : null,
+                  validator: (value) => validateUsername(value),
                   onSaved: (value) {
-                    _enteredUsername = value!.trim();
+                    _enteredUsername = value?.trim();
                   },
                 ),
               ],

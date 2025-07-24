@@ -91,7 +91,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           ),
           Consumer(
             builder: (context, ref, child) {
-              final isLoggedIn = ref.watch(authProvider);
+              final isLoggedIn = ref.watch(authProvider) != null;
               return TextButton(
                 onPressed:
                     isLoggedIn
@@ -121,7 +121,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       body: Center(
         child: Consumer(
           builder: (context, ref, _) {
-            final isLoggedIn = ref.watch(authProvider);
+            final isLoggedIn = ref.watch(authProvider) != null;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
