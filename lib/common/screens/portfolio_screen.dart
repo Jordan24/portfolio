@@ -14,14 +14,7 @@ class PortfolioScreen extends ConsumerStatefulWidget {
 }
 
 class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
-  int _counter = 0;
   late Color _tempColor;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   void _showColorPickerDialog() {
     final currentThemeColor = ref.watch(themeColorProvider);
@@ -95,22 +88,28 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             onPressed: _showColorPickerDialog,
             tooltip: 'Change Theme Color',
           ),
-          Consumer(builder: (context, ref, child) {
-            final isLoggedIn = ref.watch(authProvider);
-            final authNotifier = ref.read(authProvider.notifier);
-            return TextButton(
-              onPressed: isLoggedIn
-                  ? () => authNotifier.signOut()
-                  : () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const AuthScreen()),
-                      );
-                    },
-              child: Text(isLoggedIn ? 'Logout' : 'Login',
-                  style: TextStyle(color: theme.colorScheme.onPrimary)),
-            );
-          }),
+          Consumer(
+            builder: (context, ref, child) {
+              final isLoggedIn = ref.watch(authProvider);
+              final authNotifier = ref.read(authProvider.notifier);
+              return TextButton(
+                onPressed:
+                    isLoggedIn
+                        ? () => authNotifier.signOut()
+                        : () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const AuthScreen(),
+                            ),
+                          );
+                        },
+                child: Text(
+                  isLoggedIn ? 'Logout' : 'Login',
+                  style: TextStyle(color: theme.colorScheme.onPrimary),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: Center(
@@ -121,41 +120,39 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
+                  'Welcome to my portfolio!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'This is a work in progress and will be updated regularly.\n\nFeel free to explore!\n\nSome features require login.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
                   isLoggedIn
                       ? 'You are logged in!'
                       : 'Please log in at top right',
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: _incrementCounter,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: theme.colorScheme.onPrimary,
-                  ),
-                  child: const Text(
-                    'Coming Soon',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'You have pushed the button this many times:',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text('$_counter', style: TextStyle(fontSize: 40)),
+
               ],
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
