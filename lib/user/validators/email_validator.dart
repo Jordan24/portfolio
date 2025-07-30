@@ -1,7 +1,10 @@
 // Email validator checking for a valid email format
-bool isValidEmail(String? email) {
+String? isValidEmail(String? email) {
   final emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
-  return email != null && emailRegex.hasMatch(email);
+  if (email == null || !emailRegex.hasMatch(email)) {
+    return 'Please enter a valid email address.';
+  }
+  return null;
 }
