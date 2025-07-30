@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/user/validators/email_validator.dart';
-import 'package:portfolio/user/validators/username_validator.dart';
 import 'package:portfolio/user/validators/password_validator.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -24,7 +23,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
-  var _enteredUsername = '';
 
   @override
   void initState() {
@@ -58,7 +56,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         await authNotifier.signUp(
           _enteredEmail,
           _enteredPassword,
-          _enteredUsername,
         );
       }
       if (mounted) Navigator.of(context).pop();
@@ -105,23 +102,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (!isFront)
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'Username'),
-                    enableSuggestions: false,
-                    validator: (value) => validateUsername(value),
-                    onSaved: (value) {
-                      _enteredUsername = value!.trim();
-                    },
-                  ),
-                if (!isFront) const SizedBox(height: 12),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Email Address'),
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   textCapitalization: TextCapitalization.none,
-                  validator:
-                      (email) => isValidEmail(email),
+                  validator: (email) => isValidEmail(email),
                   onSaved: (value) {
                     _enteredEmail = value!.trim();
                   },
@@ -130,8 +116,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
-                  validator:
-                      (password) => isValidPassword(password),
+                  validator: (password) => isValidPassword(password),
                   onFieldSubmitted: (_) => _submit(),
                   onSaved: (value) {
                     _enteredPassword = value!.trim();
@@ -147,12 +132,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   child: Text(isFront ? 'Login' : 'Signup'),
                 ),
                 const SizedBox(height: 12),
-                TextButton(
+                TextButton.icon(
+                  iconAlignment:
+                      isFront ? IconAlignment.end : IconAlignment.start,
                   onPressed: _flipCard,
-                  child: Text(
+                  label: Text(
                     isFront
                         ? 'Create new account'
                         : 'I already have an account',
+                  ),
+                  icon: RotatedBox(
+                    quarterTurns: isFront ? 0 : 2,
+                    child: Icon(Icons.arrow_right_alt),
                   ),
                 ),
               ],

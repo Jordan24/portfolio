@@ -60,7 +60,7 @@ class AuthNotifier extends StateNotifier<model.User?> {
     }
   }
 
-  Future<void> signUp(String email, String password, String? username) async {
+  Future<void> signUp(String email, String password) async {
     try {
       final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -68,7 +68,6 @@ class AuthNotifier extends StateNotifier<model.User?> {
       );
       final newUser = model.User(
         id: userCredential.user!.uid,
-        username: username,
         email: email,
       );
       await FirebaseFirestore.instance
