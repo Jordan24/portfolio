@@ -5,7 +5,7 @@ import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
-import 'package:portfolio/user/screens/profile_screen.dart';
+import 'package:portfolio/user/widgets/user_profile_avatar.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
   const PortfolioScreen({super.key});
@@ -64,6 +64,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: Text(
           "Jordan's Portfolio",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
@@ -92,25 +93,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           Consumer(
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authProvider) != null;
+              if (isLoggedIn) {
+                return const UserProfileAvatar();
+              }
               return TextButton(
-                onPressed:
-                    isLoggedIn
-                        ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ProfileScreen(),
-                            ),
-                          );
-                        }
-                        : () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AuthScreen(),
-                            ),
-                          );
-                        },
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const AuthScreen()),
+                  );
+                },
                 child: Text(
-                  isLoggedIn ? 'Profile' : 'Login',
+                  'Login',
                   style: TextStyle(color: theme.colorScheme.onPrimary),
                 ),
               );
