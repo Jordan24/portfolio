@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker({
-    super.key,
-    required this.onPickImage,
-    this.imageUrl,
-  });
+  const UserImagePicker({super.key, required this.onPickImage, this.imageUrl});
 
   final void Function(XFile pickedImage) onPickImage;
   final String? imageUrl;
@@ -41,6 +37,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
+
+    final theme = Theme.of(context);
+
     ImageProvider? imageProvider;
     if (_pickedImageFile != null) {
       if (kIsWeb) {
@@ -55,22 +54,27 @@ class _UserImagePickerState extends State<UserImagePicker> {
     return Column(
       children: [
         CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey,
+          radius: 76,
+          backgroundColor: theme.colorScheme.primaryContainer,
           foregroundImage: imageProvider,
+          child:
+              imageProvider == null
+                  ? Icon(
+                    Icons.person,
+                    size: 96,
+                    color: theme.colorScheme.onPrimary,
+                  )
+                  : null,
         ),
         TextButton.icon(
           onPressed: _pickImage,
           icon: const Icon(Icons.image),
           label: Text(
             'Add Image',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),
       ],
     );
   }
 }
-
