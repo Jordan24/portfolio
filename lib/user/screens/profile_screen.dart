@@ -146,6 +146,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     _enteredUsername = value?.trim();
                   },
                 ),
+                Expanded(child: SizedBox(height: 12)),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(authProvider.notifier).signOut();
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.secondaryContainer,
+                  ),
+                  child: Text('Log Out'),
+                ),
+                const SizedBox(height: 24),
               ],
             ),
           ),
