@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["http://localhost:50144", "https://jordan-szymczyk.web.app"],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]
