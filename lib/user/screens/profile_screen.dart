@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:portfolio/user/models/user.dart' as model;
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/user/validators/email_validator.dart';
@@ -20,7 +22,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _form = GlobalKey<FormState>();
   String? _enteredUsername;
   String? _enteredEmail;
-  File? _selectedImage;
+  XFile? _selectedImage;
   var _isSaving = false;
 
   void _submit() async {
@@ -42,7 +44,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           .ref()
           .child('user_images')
           .child('${user.id}.jpg');
-      await storageRef.putFile(_selectedImage!);
+      if (kIsWeb) {
+        await storageRef.putData(await _selectedImage!.readAsBytes());
+      } else {
+        await storageRef.putFile(File(_selectedImage!.path));
+      }
       imageUrl = await storageRef.getDownloadURL();
     }
 
@@ -91,20 +97,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         actions: [
           _isSaving
               ? CircularProgressIndicator(
-                color: theme.colorScheme.onPrimary,
-                constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-              )
+                  color: theme.colorScheme.onPrimary,
+                  constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                )
               : TextButton.icon(
-                onPressed: _submit,
-                icon: Icon(Icons.save, color: theme.colorScheme.onPrimary),
-                label: Text(
-                  'Save',
-                  style: TextStyle(
-                    color: theme.colorScheme.onPrimary,
-                    fontSize: 20,
+                  onPressed: _submit,
+                  icon: Icon(Icons.save, color: theme.colorScheme.onPrimary),
+                  label: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
           const SizedBox(width: 12),
         ],
       ),

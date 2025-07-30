@@ -1,12 +1,17 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker({super.key, required this.onPickImage, this.imageUrl});
+  const UserImagePicker({
+    super.key,
+    required this.onPickImage,
+    this.imageUrl,
+  });
 
-  final void Function(File pickedImage) onPickImage;
+  final void Function(XFile pickedImage) onPickImage;
   final String? imageUrl;
 
   @override
@@ -14,11 +19,11 @@ class UserImagePicker extends StatefulWidget {
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-  File? _pickedImageFile;
+  XFile? _pickedImageFile;
 
   void _pickImage() async {
     final pickedImage = await ImagePicker().pickImage(
-      source: ImageSource.camera,
+      source: kIsWeb ? ImageSource.gallery : ImageSource.camera,
       imageQuality: 50,
       maxWidth: 150,
     );
@@ -28,7 +33,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
     }
 
     setState(() {
-      _pickedImageFile = File(pickedImage.path);
+      _pickedImageFile = pickedImage;
     });
 
     widget.onPickImage(_pickedImageFile!);
@@ -38,30 +43,34 @@ class _UserImagePickerState extends State<UserImagePicker> {
   Widget build(BuildContext context) {
     ImageProvider? imageProvider;
     if (_pickedImageFile != null) {
-      imageProvider = FileImage(_pickedImageFile!);
+      if (kIsWeb) {
+        imageProvider = NetworkImage(_pickedImageFile!.path);
+      } else {
+        imageProvider = FileImage(File(_pickedImageFile!.path));
+      }
     } else if (widget.imageUrl != null) {
       imageProvider = NetworkImage(widget.imageUrl!);
     }
 
     return Column(
       children: [
-        GestureDetector(
-          onTap: _pickImage,
-          child: CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.grey,
-            foregroundImage: imageProvider,
-          ),
+        CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.grey,
+          foregroundImage: imageProvider,
         ),
         TextButton.icon(
           onPressed: _pickImage,
           icon: const Icon(Icons.image),
           label: Text(
             'Add Image',
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
       ],
     );
   }
 }
+
