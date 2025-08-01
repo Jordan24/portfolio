@@ -18,10 +18,10 @@ class UserProfileAvatar extends ConsumerWidget {
       },
       child: CircleAvatar(
         radius: 20,
-        backgroundImage: user?.imageUrl != null && user!.imageUrl!.isNotEmpty
-            ? NetworkImage(user.imageUrl!)
+        backgroundImage: user?.profileImageUrl != null && user!.profileImageUrl!.isNotEmpty
+            ? NetworkImage(user.profileImageUrl!)
             : null,
-        child: user?.imageUrl == null || user!.imageUrl!.isEmpty
+        child: user?.profileImageUrl == null || user!.profileImageUrl!.isEmpty
             ? const Icon(Icons.person)
             : null,
       ),

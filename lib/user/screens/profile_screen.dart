@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:portfolio/common/providers/repository_providers.dart';
 import 'package:portfolio/user/models/user.dart' as model;
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/user/validators/email_validator.dart';
@@ -37,30 +37,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     });
 
     final user = ref.read(authProvider)!;
-    String? imageUrl = user.imageUrl;
+    String? imageUrl = user.profileImageUrl;
 
     if (_selectedImage != null) {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('user_images')
-          .child('${user.id}.jpg');
-      if (kIsWeb) {
-        await storageRef.putData(await _selectedImage!.readAsBytes());
-      } else {
-        await storageRef.putFile(File(_selectedImage!.path));
-      }
-      imageUrl = await storageRef.getDownloadURL();
+      imageUrl = await ref.read(userRepositoryProvider).uploadProfileImage(
+            user.id,
+            File(_selectedImage!.path),
+          );
     }
 
     final updatedUser = model.User(
       id: user.id,
       username: _enteredUsername,
       email: _enteredEmail ?? user.email,
-      imageUrl: imageUrl,
+      profileImageUrl: imageUrl,
     );
 
     try {
-      await ref.read(authProvider.notifier).updateUserData(updatedUser);
+      await ref.read(userRepositoryProvider).updateUser(updatedUser);
     } catch (error) {
       if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
       if (mounted) {
@@ -129,7 +123,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   onPickImage: (pickedImage) {
                     _selectedImage = pickedImage;
                   },
-                  imageUrl: user?.imageUrl,
+                  imageUrl: user?.profileImageUrl,
                 ),
                 TextFormField(
                   initialValue: user?.email,
@@ -155,7 +149,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Expanded(child: SizedBox(height: 12)),
                 ElevatedButton(
                   onPressed: () {
-                    ref.read(authProvider.notifier).signOut();
+                    ref.read(authRepositoryProvider).signOut();
                     if (mounted) {
                       Navigator.of(context).pop();
                     }
