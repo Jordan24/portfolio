@@ -18,6 +18,15 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
+  Stream<User> getUserStream(String userId) {
+    return _firestore.collection('users').doc(userId).snapshots().map((
+      snapshot,
+    ) {
+      return User.fromFirestore(snapshot);
+    });
+  }
+
+  @override
   Future<void> updateUser(User user) async {
     await _firestore.collection('users').doc(user.id).set(user.toFirestore());
   }
@@ -26,6 +35,7 @@ class FirebaseUserRepository implements UserRepository {
   Future<String> uploadProfileImage(String userId, File image) async {
     final ref = _storage.ref().child('profile_images').child(userId);
     final uploadTask = await ref.putFile(image);
-    return await uploadTask.ref.getDownloadURL();
+    final downloadUrl = await uploadTask.ref.getDownloadURL();
+    return downloadUrl;
   }
 }

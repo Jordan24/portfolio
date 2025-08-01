@@ -46,7 +46,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
     _form.currentState!.save();
 
-    final authNotifier = ref.read(authProvider.notifier);
+    final authNotifier = ref.read(authControllerProvider);
 
     try {
       if (_isLogin) {

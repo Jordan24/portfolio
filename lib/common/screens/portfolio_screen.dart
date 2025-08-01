@@ -92,7 +92,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           ),
           Consumer(
             builder: (context, ref, child) {
-              final isLoggedIn = ref.watch(authProvider) != null;
+              final isLoggedIn = ref.watch(authStateProvider).value != null;
               if (isLoggedIn) {
                 return const UserProfileAvatar();
               }
@@ -114,7 +114,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       body: Center(
         child: Consumer(
           builder: (context, ref, _) {
-            final isLoggedIn = ref.watch(authProvider) != null;
+            final isLoggedIn = ref.watch(authStateProvider).value != null;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

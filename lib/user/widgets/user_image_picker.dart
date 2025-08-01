@@ -47,8 +47,12 @@ class _UserImagePickerState extends State<UserImagePicker> {
       } else {
         imageProvider = FileImage(File(_pickedImageFile!.path));
       }
-    } else if (widget.imageUrl != null) {
-      imageProvider = NetworkImage(widget.imageUrl!);
+    } else if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+      if (kIsWeb || widget.imageUrl!.startsWith('http')) {
+        imageProvider = NetworkImage(widget.imageUrl!);
+      } else {
+        imageProvider = FileImage(File(widget.imageUrl!));
+      }
     }
 
     return Column(
