@@ -34,7 +34,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     setState(() {
       _isSaving = true;
     });
-
     final user = ref.read(userProvider).value!;
     String? imageUrl = user.profileImageUrl;
 

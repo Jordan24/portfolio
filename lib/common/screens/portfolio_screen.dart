@@ -34,7 +34,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                   (color) => setState(() => _tempColor = color as Color),
             ),
           ),
-          actions: <Widget>[
+          actions: [
             TextButton(
               child: const Text('OK'),
               onPressed: () {
@@ -69,7 +69,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           "Jordan's Portfolio",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
-        actions: <Widget>[
+        actions: [
           IconButton(
             icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
             iconSize: 30.0,
