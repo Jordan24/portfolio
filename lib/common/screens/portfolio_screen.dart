@@ -34,7 +34,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                   (color) => setState(() => _tempColor = color as Color),
             ),
           ),
-          actions: <Widget>[
+          actions: [
             TextButton(
               child: const Text('OK'),
               onPressed: () {
@@ -69,7 +69,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           "Jordan's Portfolio",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
-        actions: <Widget>[
+        actions: [
           IconButton(
             icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
             iconSize: 30.0,
@@ -92,7 +92,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           ),
           Consumer(
             builder: (context, ref, child) {
-              final isLoggedIn = ref.watch(authProvider) != null;
+              final isLoggedIn = ref.watch(authStateProvider).value != null;
               if (isLoggedIn) {
                 return const UserProfileAvatar();
               }
@@ -114,7 +114,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       body: Center(
         child: Consumer(
           builder: (context, ref, _) {
-            final isLoggedIn = ref.watch(authProvider) != null;
+            final isLoggedIn = ref.watch(authStateProvider).value != null;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

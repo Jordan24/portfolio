@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
@@ -47,7 +46,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
     _form.currentState!.save();
 
-    final authNotifier = ref.read(authProvider.notifier);
+    final authNotifier = ref.read(authControllerProvider);
 
     try {
       if (_isLogin) {
@@ -59,11 +58,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         );
       }
       if (mounted) Navigator.of(context).pop();
-    } on FirebaseAuthException catch (error) {
+    } catch (error) {
       if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message ?? 'Authentication failed.')),
+          SnackBar(content: Text(error.toString())),
         );
       }
     }

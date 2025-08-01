@@ -1,103 +1,51 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:portfolio/user/models/user.dart' as model;
+import 'package:portfolio/common/data/auth_repository.dart';
+import 'package:portfolio/common/providers/repository_providers.dart';
+import 'package:portfolio/user/models/user.dart';
 
-class AuthNotifier extends StateNotifier<model.User?> {
-  AuthNotifier() : super(null) {
-    _loadUser();
-  }
+final authStateProvider = StreamProvider((ref) {
+  return ref.watch(authRepositoryProvider).authStateChanges;
+});
 
-  Future<void> _loadUser() async {
-    final firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .get();
-      if (userDoc.exists) {
-        state = model.User.fromJson(firebaseUser.uid, userDoc.data()!);
-      } else {
-        // This case might happen if the user was created in auth but the document wasn't created in firestore
-        final newUser = model.User(
-          id: firebaseUser.uid,
-          email: firebaseUser.email!,
-        );
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(newUser.id)
-            .set(newUser.toJson());
-        state = newUser;
-      }
-    }
-  }
+final authControllerProvider = Provider((ref) {
+  return AuthController(ref.watch(authRepositoryProvider), ref);
+});
+
+class AuthController {
+  final AuthRepository _authRepository;
+  final Ref _ref;
+
+  AuthController(this._authRepository, this._ref);
 
   Future<void> signIn(String email, String password) async {
     try {
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .get();
-      if (userDoc.exists) {
-        state = model.User.fromJson(userCredential.user!.uid, userDoc.data()!);
-      } else {
-        final newUser = model.User(
-          id: userCredential.user!.uid,
-          email: email,
-        );
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(newUser.id)
-            .set(newUser.toJson());
-        state = newUser;
-      }
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      await _authRepository.signInWithEmail(email, password);
+    } catch (e) {
+      rethrow;
     }
   }
 
   Future<void> signUp(String email, String password) async {
     try {
-      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await _authRepository.signUpWithEmail(email, password);
+      final newUserCredentials = await _ref.read(authStateProvider.future);
+      final newUser = User(
+        id: newUserCredentials!.id,
         email: email,
-        password: password,
+        username: null,
+        profileImageUrl: '',
       );
-      final newUser = model.User(
-        id: userCredential.user!.uid,
-        email: email,
-      );
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(newUser.id)
-          .set(newUser.toJson());
-      state = newUser;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      await _ref.read(userRepositoryProvider).updateUser(newUser);
+    } catch (e) {
+      rethrow;
     }
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    state = null;
-  }
-
-  Future<void> updateUserData(model.User user) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.id)
-          .update(user.toJson());
-      state = user;
+      await _authRepository.signOut();
     } catch (e) {
-      throw Exception(e.toString());
+      rethrow;
     }
   }
 }
-
-final authProvider = StateNotifierProvider<AuthNotifier, model.User?>((ref) {
-  return AuthNotifier();
-});
