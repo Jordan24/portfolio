@@ -118,6 +118,13 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/images/Headshot-cropped-Jordan.png',
+                  ),
+                  radius: 120,
+                ),
+                SizedBox(height: 20),
                 Text(
                   'Welcome to my portfolio!',
                   textAlign: TextAlign.center,
