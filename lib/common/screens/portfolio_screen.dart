@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +58,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: Text(
-          "Jordan's Portfolio",
+          "Jordan's Demo App",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         actions: [
@@ -98,7 +99,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Welcome to my portfolio!',
+                  'Welcome to my demo app!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
@@ -108,7 +109,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'This is a work in progress and will be updated regularly.\n\nFeel free to explore!\n\nSome features require login.',
+                  'This is a work in progress and will be updated regularly with commonly requested features.\nAll functionality has been hand coded as a demonstration.\nFeel free to explore!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -116,15 +117,33 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(
-                  isLoggedIn
-                      ? 'You are logged in!'
-                      : 'Please log in at top right',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 64),
+                    AnimatedTextKit(
+                      repeatForever: true,
+                      animatedTexts: [
+                        ...[
+                          'Authentication',
+                          'File Upload',
+                          'Database Manipulation',
+                          'Theming',
+                          'Light/Dark Mode',
+                        ].map((word) {
+                          return RotateAnimatedText(
+                            word,
+                            duration: Duration(seconds: 2),
+                            textStyle: theme.textTheme.headlineMedium?.copyWith(
+                              color: theme.colorScheme.tertiary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             );
