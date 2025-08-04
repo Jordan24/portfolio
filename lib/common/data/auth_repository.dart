@@ -1,4 +1,3 @@
-
 import 'package:portfolio/user/models/user.dart';
 
 abstract class AuthRepository {

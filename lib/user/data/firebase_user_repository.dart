@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,4 +48,3 @@ class FirebaseUserRepository implements UserRepository {
     return await ref.getDownloadURL();
   }
 }
-

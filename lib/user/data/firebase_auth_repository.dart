@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:portfolio/common/data/auth_repository.dart';
 import 'package:portfolio/user/models/user.dart';
@@ -17,12 +16,18 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithEmail(String email, String password) async {
-    await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
   @override
   Future<void> signUpWithEmail(String email, String password) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
   @override

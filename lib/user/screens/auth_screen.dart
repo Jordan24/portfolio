@@ -52,18 +52,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
       if (_isLogin) {
         await authNotifier.signIn(_enteredEmail, _enteredPassword);
       } else {
-        await authNotifier.signUp(
-          _enteredEmail,
-          _enteredPassword,
-        );
+        await authNotifier.signUp(_enteredEmail, _enteredPassword);
       }
       if (mounted) Navigator.of(context).pop();
     } catch (error) {
       if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
       }
     }
   }

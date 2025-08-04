@@ -27,13 +27,19 @@ class UserProfileMenu extends ConsumerWidget {
                 ],
               ),
             ),
-            PopupMenuItem(value: 'logout', child: Row(
-              spacing: 8,
-              children: [
-                Icon(Icons.logout, color: theme.colorScheme.primary),
-                Text('Logout', style: TextStyle(color: theme.colorScheme.primary),),
-              ],
-            )),
+            PopupMenuItem(
+              value: 'logout',
+              child: Row(
+                spacing: 8,
+                children: [
+                  Icon(Icons.logout, color: theme.colorScheme.primary),
+                  Text(
+                    'Logout',
+                    style: TextStyle(color: theme.colorScheme.primary),
+                  ),
+                ],
+              ),
+            ),
           ],
       onSelected: (String value) {
         if (value == 'edit_profile') {
