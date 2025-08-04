@@ -1,7 +1,10 @@
 
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:portfolio/common/data/user_repository.dart';
 import 'package:portfolio/user/models/user.dart';
 
@@ -32,10 +35,18 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<String> uploadProfileImage(String userId, File image) async {
+  Future<String> uploadProfileImage(String userId, XFile image) async {
     final ref = _storage.ref().child('profile_images').child(userId);
-    final uploadTask = await ref.putFile(image);
-    final downloadUrl = await uploadTask.ref.getDownloadURL();
-    return downloadUrl;
+    final metadata = SettableMetadata(contentType: image.mimeType);
+
+    if (kIsWeb) {
+      final imageData = await image.readAsBytes();
+      await ref.putData(imageData, metadata);
+    } else {
+      await ref.putFile(File(image.path), metadata);
+    }
+
+    return await ref.getDownloadURL();
   }
 }
+
