@@ -5,7 +5,7 @@ import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
-import 'package:portfolio/user/widgets/user_profile_avatar.dart';
+import 'package:portfolio/user/widgets/user_profile_menu.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
   const PortfolioScreen({super.key});
@@ -94,7 +94,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authStateProvider).value != null;
               if (isLoggedIn) {
-                return const UserProfileAvatar();
+                return const UserProfileMenu();
               }
               return TextButton(
                 onPressed: () {

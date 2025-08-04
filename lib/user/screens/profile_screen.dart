@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:portfolio/common/providers/repository_providers.dart';
 import 'package:portfolio/user/models/user.dart';
-import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/user/providers/user_provider.dart';
 import 'package:portfolio/user/validators/email_validator.dart';
 import 'package:portfolio/user/validators/username_validator.dart';
@@ -153,19 +152,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   },
                 ),
                 Expanded(child: SizedBox(height: 12)),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.read(authControllerProvider).signOut();
-                    if (mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.secondaryContainer,
-                  ),
-                  child: Text('Log Out'),
-                ),
-                const SizedBox(height: 24),
               ],
             ),
           ),
