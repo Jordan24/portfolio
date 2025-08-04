@@ -5,7 +5,6 @@ import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
-import 'package:portfolio/user/widgets/user_profile_avatar.dart';
 import 'package:portfolio/user/widgets/user_profile_menu.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
