@@ -1,10 +1,9 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:portfolio/common/providers/repository_providers.dart';
-import 'package:portfolio/user/models/user.dart' as model;
+import 'package:portfolio/user/models/user.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/user/providers/user_provider.dart';
 import 'package:portfolio/user/validators/email_validator.dart';
@@ -38,12 +37,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     String? imageUrl = user.profileImageUrl;
 
     if (_selectedImage != null) {
-      imageUrl = await ref
-          .read(userRepositoryProvider)
-          .uploadProfileImage(user.id, File(_selectedImage!.path));
+      try {
+        imageUrl = await ref
+            .read(userRepositoryProvider)
+            .uploadProfileImage(user.id, _selectedImage!);
+      } catch (error) {
+        if (kDebugMode) {
+          print('\x1B[31m_error:$error\x1B[0m');
+        }
+      }
     }
 
-    final updatedUser = model.User(
+    final updatedUser = User(
       id: user.id,
       username: _enteredUsername,
       email: _enteredEmail ?? user.email,
