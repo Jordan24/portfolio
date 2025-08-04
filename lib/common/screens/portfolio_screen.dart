@@ -87,7 +87,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       body: Center(
         child: Consumer(
           builder: (context, ref, _) {
-            final isLoggedIn = ref.watch(authStateProvider).value != null;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
