@@ -37,7 +37,6 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
 
     ImageProvider? imageProvider;

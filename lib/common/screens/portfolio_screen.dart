@@ -1,10 +1,11 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
-import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
+import 'package:portfolio/user/widgets/left_drawer.dart';
 import 'package:portfolio/user/widgets/user_profile_menu.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
@@ -50,46 +51,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ref = this.ref;
     final theme = Theme.of(context);
-    final themeMode = ref.watch(themeModeProvider);
-    final themeModeNotifier = ref.read(themeModeProvider.notifier);
-    final systemIsDark =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final isDarkMode =
-        themeMode == ThemeMode.system
-            ? systemIsDark
-            : themeMode == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: Text(
-          "Jordan's Portfolio",
+          "Jordan's Demo App",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         actions: [
-          IconButton(
-            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            iconSize: 30.0,
-            color: theme.colorScheme.onPrimary,
-            onPressed: () {
-              if (isDarkMode) {
-                themeModeNotifier.setThemeMode(ThemeMode.light);
-              } else {
-                themeModeNotifier.setThemeMode(ThemeMode.dark);
-              }
-            },
-            tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
-          ),
-          IconButton(
-            icon: Icon(Icons.color_lens),
-            color: theme.colorScheme.onPrimary,
-            iconSize: 30.0,
-            onPressed: _showColorPickerDialog,
-            tooltip: 'Change Theme Color',
-          ),
           Consumer(
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authStateProvider).value != null;
@@ -111,6 +83,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           ),
         ],
       ),
+      drawer: LeftDrawer(onColorPickerTapped: _showColorPickerDialog),
       body: Center(
         child: Consumer(
           builder: (context, ref, _) {
@@ -118,8 +91,15 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/images/Headshot-cropped-Jordan.png',
+                  ),
+                  radius: 120,
+                ),
+                SizedBox(height: 20),
                 Text(
-                  'Welcome to my portfolio!',
+                  'Welcome to my demo app!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
@@ -129,7 +109,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'This is a work in progress and will be updated regularly.\n\nFeel free to explore!\n\nSome features require login.',
+                  'This is a work in progress and will be updated regularly with commonly requested features.\nAll functionality has been hand coded as a demonstration.\nFeel free to explore!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -137,15 +117,33 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(
-                  isLoggedIn
-                      ? 'You are logged in!'
-                      : 'Please log in at top right',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 64),
+                    AnimatedTextKit(
+                      repeatForever: true,
+                      animatedTexts: [
+                        ...[
+                          'Authentication',
+                          'File Upload',
+                          'Database Manipulation',
+                          'Theming',
+                          'Light/Dark Mode',
+                        ].map((word) {
+                          return RotateAnimatedText(
+                            word,
+                            duration: Duration(seconds: 2),
+                            textStyle: theme.textTheme.headlineMedium?.copyWith(
+                              color: theme.colorScheme.tertiary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             );

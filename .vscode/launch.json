@@ -10,6 +10,13 @@
       "request": "launch",
       "program": "lib/main.dart",
       "args": ["-d", "chrome", "--web-port", "50144"]
+    },
+    {
+      "name": "Flutter Android (Pixel 8 Pro)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "args": ["-d", "emulator-5554"] // Replace with your emulator ID if different
     }
   ]
 }
