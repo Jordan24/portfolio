@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
-import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
+import 'package:portfolio/user/widgets/left_drawer.dart';
 import 'package:portfolio/user/widgets/user_profile_menu.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
@@ -50,16 +50,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ref = this.ref;
     final theme = Theme.of(context);
-    final themeMode = ref.watch(themeModeProvider);
-    final themeModeNotifier = ref.read(themeModeProvider.notifier);
-    final systemIsDark =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final isDarkMode =
-        themeMode == ThemeMode.system
-            ? systemIsDark
-            : themeMode == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,26 +61,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         actions: [
-          IconButton(
-            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            iconSize: 30.0,
-            color: theme.colorScheme.onPrimary,
-            onPressed: () {
-              if (isDarkMode) {
-                themeModeNotifier.setThemeMode(ThemeMode.light);
-              } else {
-                themeModeNotifier.setThemeMode(ThemeMode.dark);
-              }
-            },
-            tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
-          ),
-          IconButton(
-            icon: Icon(Icons.color_lens),
-            color: theme.colorScheme.onPrimary,
-            iconSize: 30.0,
-            onPressed: _showColorPickerDialog,
-            tooltip: 'Change Theme Color',
-          ),
           Consumer(
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authStateProvider).value != null;
@@ -111,6 +82,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           ),
         ],
       ),
+      drawer: LeftDrawer(onColorPickerTapped: _showColorPickerDialog),
       body: Center(
         child: Consumer(
           builder: (context, ref, _) {
