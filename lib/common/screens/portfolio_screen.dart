@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/location/screens/location_screen.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
@@ -55,7 +56,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
         actionsPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: Text(
           "Jordan's Demo App",
@@ -147,6 +147,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                         ],
                       ),
                     ],
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LocationScreen(),
+                        ),
+                      );
+                    },
+                    child: Text('Location'),
                   ),
                 ],
               );
