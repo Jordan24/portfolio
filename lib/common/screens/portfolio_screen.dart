@@ -84,69 +84,74 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         ],
       ),
       drawer: LeftDrawer(onColorPickerTapped: _showColorPickerDialog),
-      body: Center(
-        child: Consumer(
-          builder: (context, ref, _) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'images/Headshot-cropped-Jordan.png',
-                  ),
-                  radius: 120,
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Welcome to my demo app!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'This is a work in progress and will be updated regularly with commonly requested features.\nAll functionality has been hand coded as a demonstration.\nFeel free to explore!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 64),
-                    AnimatedTextKit(
-                      repeatForever: true,
-                      animatedTexts: [
-                        ...[
-                          'Authentication',
-                          'File Upload',
-                          'Database Manipulation',
-                          'Theming',
-                          'Light/Dark Mode',
-                        ].map((word) {
-                          return RotateAnimatedText(
-                            word,
-                            duration: Duration(seconds: 2),
-                            textStyle: theme.textTheme.headlineMedium?.copyWith(
-                              color: theme.colorScheme.tertiary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        }),
-                      ],
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(
+          child: Consumer(
+            builder: (context, ref, _) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                  CircleAvatar(
+                    backgroundImage: AssetImage(
+                      'assets/images/Headshot-cropped-Jordan.png',
                     ),
-                  ],
-                ),
-              ],
-            );
-          },
+                    radius: 120,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Welcome to my demo app!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'This is a work in progress and will be updated regularly with commonly requested features.\nAll functionality has been hand coded as a demonstration.\nFeel free to explore!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 64),
+                      AnimatedTextKit(
+                        repeatForever: true,
+                        animatedTexts: [
+                          ...[
+                            'Authentication',
+                            'File Upload',
+                            'Database Manipulation',
+                            'Theming',
+                            'Light/Dark Mode',
+                          ].map((word) {
+                            return RotateAnimatedText(
+                              word,
+                              duration: Duration(seconds: 2),
+                              textStyle: theme.textTheme.headlineMedium
+                                  ?.copyWith(
+                                    color: theme.colorScheme.tertiary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

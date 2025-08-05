@@ -1,22 +1,22 @@
-{
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Flutter Web (Chrome, port 50144)",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "args": ["-d", "chrome", "--web-port", "50144"]
-    },
-    {
-      "name": "Flutter Android (Pixel 8 Pro)",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "args": ["-d", "emulator-5554"] // Replace with your emulator ID if different
-    }
-  ]
-}
+// {
+//   // Use IntelliSense to learn about possible attributes.
+//   // Hover to view descriptions of existing attributes.
+//   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+//   "version": "0.2.0",
+//   "configurations": [
+//     {
+//       "name": "Flutter Web (Chrome, port 50144)",
+//       "type": "dart",
+//       "request": "launch",
+//       "program": "lib/main.dart",
+//       "args": ["-d", "chrome", "--web-port", "50144"]
+//     },
+//     {
+//       "name": "Pixel 8 Pro",
+//       "type": "dart",
+//       "request": "launch",
+//       "deviceId": "emulator-5554",
+//       "program": "lib/main.dart"
+//     }
+//   ]
+// }
