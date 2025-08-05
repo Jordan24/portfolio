@@ -92,7 +92,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                    'assets/images/Headshot-cropped-Jordan.png',
+                    'images/Headshot-cropped-Jordan.png',
                   ),
                   radius: 120,
                 ),
