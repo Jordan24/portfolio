@@ -8,7 +8,10 @@ class AppTheme {
     );
     return ThemeData(
       colorScheme: colorScheme,
-      appBarTheme: AppBarTheme(foregroundColor: colorScheme.onPrimary),
+      appBarTheme: AppBarTheme(
+        foregroundColor: colorScheme.onPrimary,
+        backgroundColor: colorScheme.primary,
+      ),
     );
   }
 
@@ -19,7 +22,10 @@ class AppTheme {
     );
     return ThemeData(
       colorScheme: colorScheme,
-      appBarTheme: AppBarTheme(foregroundColor: colorScheme.onSecondary),
+      appBarTheme: AppBarTheme(
+        foregroundColor: colorScheme.onSecondary,
+        backgroundColor: colorScheme.primary,
+      ),
     );
   }
 }

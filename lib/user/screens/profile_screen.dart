@@ -83,11 +83,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          'Profile',
-          style: TextStyle(color: theme.colorScheme.onPrimary),
-        ),
+        title: Text('Profile'),
         actions: [
           _isSaving
               ? CircularProgressIndicator(
