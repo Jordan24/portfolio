@@ -45,39 +45,24 @@ class _LocationScreenState extends State<LocationScreen> {
     });
   }
 
-  Future<PlaceLocation?> useCurrentLocation() async {
-    setState(() {
-      _isLoading = true;
-    });
-
+  Future<void> useCurrentLocation() async {
+    setState(() => _isLoading = true);
     final locationData = await getCurrentLocation();
-    if (locationData == null) {
-      setState(() {
-        _isLoading = false;
-      });
-      return null;
-    }
 
-    _savePlace(locationData.latitude, locationData.longitude);
+    if (locationData == null) return;
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    return locationData;
+    await _savePlace(locationData.latitude, locationData.longitude);
+    setState(() => _isLoading = false);
   }
 
   void _selectOnMap() async {
-    PlaceLocation? currentLocation = _pickedLocation;
-    final navigator = Navigator.of(context);
-
     setState(() => _isLoading = true);
-    currentLocation ??= await getCurrentLocation();
+    final currentLocation = _pickedLocation ?? await getCurrentLocation();
     setState(() => _isLoading = false);
 
     if (!mounted) return;
 
-    final selectedLocation = await navigator.push<LatLng>(
+    final selectedLocation = await Navigator.of(context).push<LatLng>(
       MaterialPageRoute(
         builder:
             (ctx) => MapScreen(
@@ -130,7 +115,6 @@ class _LocationScreenState extends State<LocationScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 16,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'GPS and Google Maps API integration',
