@@ -132,6 +132,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                             'Database Manipulation',
                             'Theming',
                             'Light/Dark Mode',
+                            'GPS Integration',
+                            'Google Maps API',
                           ].map((word) {
                             return RotateAnimatedText(
                               word,
