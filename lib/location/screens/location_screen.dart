@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:portfolio/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
+import 'package:portfolio/location/data/current_location.dart';
 import 'package:portfolio/location/models/place_location_model.dart';
 import 'package:portfolio/location/screens/map_screen.dart';
 
@@ -44,47 +45,54 @@ class _LocationScreenState extends State<LocationScreen> {
     });
   }
 
-  Future<PlaceLocation?> getCurrentLocation() async {
-    Location location = Location();
-
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return null;
-      }
-    }
-
-    permissionGranted = await location.requestPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
-
+  Future<PlaceLocation?> useCurrentLocation() async {
     setState(() {
       _isLoading = true;
     });
 
-    locationData = await location.getLocation();
-    final lat = locationData.latitude;
-    final lon = locationData.longitude;
-
-    if (lat == null || lon == null) {
+    final locationData = await getCurrentLocation();
+    if (locationData == null) {
       setState(() {
         _isLoading = false;
       });
       return null;
     }
 
-    _savePlace(lat, lon);
+    _savePlace(locationData.latitude, locationData.longitude);
 
-    return PlaceLocation(latitude: lat, longitude: lon, address: '');
+    setState(() {
+      _isLoading = false;
+    });
+
+    return locationData;
+  }
+
+  void _selectOnMap() async {
+    PlaceLocation? currentLocation = _pickedLocation;
+    final navigator = Navigator.of(context);
+
+    setState(() => _isLoading = true);
+    currentLocation ??= await getCurrentLocation();
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    final selectedLocation = await navigator.push<LatLng>(
+      MaterialPageRoute(
+        builder:
+            (ctx) => MapScreen(
+              location: PlaceLocation(
+                latitude: currentLocation?.latitude ?? 37.422,
+                longitude: currentLocation?.longitude ?? -122.084,
+                address: "",
+              ),
+            ),
+      ),
+    );
+
+    if (selectedLocation == null) return;
+
+    _savePlace(selectedLocation.latitude, selectedLocation.longitude);
   }
 
   @override
@@ -116,37 +124,27 @@ class _LocationScreenState extends State<LocationScreen> {
       locationContent = const Center(child: CircularProgressIndicator());
     }
 
-    void selectOnMap() async {
-      final PlaceLocation? currentLocation =
-          _pickedLocation ?? await getCurrentLocation();
-      final selectedLocation = await Navigator.of(context).push<LatLng>(
-        MaterialPageRoute(
-          builder:
-              (ctx) => MapScreen(
-                location: PlaceLocation(
-                  latitude: currentLocation?.latitude ?? 37.422,
-                  longitude: currentLocation?.longitude ?? -122.084,
-                  address: "",
-                ),
-              ),
-        ),
-      );
-
-      if (selectedLocation == null) return;
-
-      _savePlace(selectedLocation.latitude, selectedLocation.longitude);
-    }
-
     return Scaffold(
-      appBar: AppBar(title: Text('Location')),
+      appBar: AppBar(title: const Text('Location')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 16,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'GPS and Google Maps API integration',
+              style: theme.textTheme.headlineSmall!.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'This page demonstrates the use of GPS or Google Maps API to get a location and Google Maps API to display it.',
+            ),
             Center(
               child: Container(
-                height: 240,
+                height: kIsWeb ? 400 : 200,
                 width: double.infinity,
                 constraints: const BoxConstraints(maxWidth: 500),
                 alignment: Alignment.center,
@@ -165,13 +163,13 @@ class _LocationScreenState extends State<LocationScreen> {
                 TextButton.icon(
                   icon: const Icon(Icons.location_on),
                   label: const Text('Get Current Location'),
-                  onPressed: getCurrentLocation,
+                  onPressed: useCurrentLocation,
                 ),
-                SizedBox(width: 24),
+                const SizedBox(width: 24),
                 TextButton.icon(
                   icon: const Icon(Icons.map),
                   label: const Text('Select on Map'),
-                  onPressed: selectOnMap,
+                  onPressed: _selectOnMap,
                 ),
               ],
             ),
