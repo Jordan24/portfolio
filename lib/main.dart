@@ -1,4 +1,5 @@
 import 'firebase_options.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:portfolio/theme/app_theme.dart';
 import 'package:portfolio/common/services/web_script_loader.dart';
 
 void main() async {
-  injectGoogleMapsScript();
+  if (kIsWeb) injectGoogleMapsScript();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: PortfolioApp()));
