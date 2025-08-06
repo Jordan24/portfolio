@@ -9,7 +9,10 @@ import 'package:portfolio/common/providers/theme_mode_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/theme/app_theme.dart';
 
+import 'package:portfolio/common/services/web_script_loader.dart';
+
 void main() async {
+  injectGoogleMapsScript();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: PortfolioApp()));
