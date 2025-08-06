@@ -10,16 +10,19 @@ class UserProfileAvatar extends ConsumerWidget {
     final user = ref.watch(userProvider).value;
 
     return GestureDetector(
-      child: CircleAvatar(
-        radius: 20,
-        backgroundImage:
-            user?.profileImageUrl != null && user!.profileImageUrl!.isNotEmpty
-                ? NetworkImage(user.profileImageUrl!)
-                : null,
-        child:
-            user?.profileImageUrl == null || user!.profileImageUrl!.isEmpty
-                ? const Icon(Icons.person)
-                : null,
+      child: Hero(
+        tag: 'user-profile-avatar',
+        child: CircleAvatar(
+          radius: 20,
+          backgroundImage:
+              user?.profileImageUrl != null && user!.profileImageUrl!.isNotEmpty
+                  ? NetworkImage(user.profileImageUrl!)
+                  : null,
+          child:
+              user?.profileImageUrl == null || user!.profileImageUrl!.isEmpty
+                  ? const Icon(Icons.person)
+                  : null,
+        ),
       ),
     );
   }

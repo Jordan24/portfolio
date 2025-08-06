@@ -56,18 +56,21 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
     return Column(
       children: [
-        CircleAvatar(
-          radius: 76,
-          backgroundColor: theme.colorScheme.primaryContainer,
-          foregroundImage: imageProvider,
-          child:
-              imageProvider == null
-                  ? Icon(
-                    Icons.person,
-                    size: 96,
-                    color: theme.colorScheme.onPrimary,
-                  )
-                  : null,
+        Hero(
+          tag: 'user-profile-avatar',
+          child: CircleAvatar(
+            radius: 76,
+            backgroundColor: theme.colorScheme.primaryContainer,
+            foregroundImage: imageProvider,
+            child:
+                imageProvider == null
+                    ? Icon(
+                      Icons.person,
+                      size: 96,
+                      color: theme.colorScheme.onPrimary,
+                    )
+                    : null,
+          ),
         ),
         TextButton.icon(
           onPressed: _pickImage,
