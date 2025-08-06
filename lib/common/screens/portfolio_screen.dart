@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:portfolio/common/widgets/github_button.dart';
 import 'package:portfolio/common/widgets/linkedin_button.dart';
 import 'package:portfolio/common/widgets/mobile_navigation.dart';
+import 'package:portfolio/common/widgets/resume_button.dart';
 import 'package:portfolio/location/screens/location_screen.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
@@ -66,7 +67,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         actions: [
-          if (!isMobile) ...[LinkedinButton(), GithubButton()],
+          if (!isMobile) ...[LinkedinButton(), GithubButton(), ResumeButton()],
           Consumer(
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authStateProvider).value != null;
