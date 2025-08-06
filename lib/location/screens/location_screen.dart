@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:portfolio/common/widgets/mobile_navigation.dart';
 import 'package:portfolio/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,7 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   PlaceLocation? _pickedLocation;
   var _isLoading = false;
+  bool get isMobile => MediaQuery.of(context).size.width < 600;
 
   String get locationImage {
     if (_pickedLocation == null) return '';
@@ -45,39 +47,24 @@ class _LocationScreenState extends State<LocationScreen> {
     });
   }
 
-  Future<PlaceLocation?> useCurrentLocation() async {
-    setState(() {
-      _isLoading = true;
-    });
-
+  Future<void> useCurrentLocation() async {
+    setState(() => _isLoading = true);
     final locationData = await getCurrentLocation();
-    if (locationData == null) {
-      setState(() {
-        _isLoading = false;
-      });
-      return null;
-    }
 
-    _savePlace(locationData.latitude, locationData.longitude);
+    if (locationData == null) return;
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    return locationData;
+    await _savePlace(locationData.latitude, locationData.longitude);
+    setState(() => _isLoading = false);
   }
 
   void _selectOnMap() async {
-    PlaceLocation? currentLocation = _pickedLocation;
-    final navigator = Navigator.of(context);
-
     setState(() => _isLoading = true);
-    currentLocation ??= await getCurrentLocation();
+    final currentLocation = _pickedLocation ?? await getCurrentLocation();
     setState(() => _isLoading = false);
 
     if (!mounted) return;
 
-    final selectedLocation = await navigator.push<LatLng>(
+    final selectedLocation = await Navigator.of(context).push<LatLng>(
       MaterialPageRoute(
         builder:
             (ctx) => MapScreen(
@@ -126,11 +113,13 @@ class _LocationScreenState extends State<LocationScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Location')),
+      bottomNavigationBar: isMobile
+          ? const MobileNavigation()
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 16,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'GPS and Google Maps API integration',

@@ -2,11 +2,15 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/common/widgets/github_button.dart';
+import 'package:portfolio/common/widgets/linkedin_button.dart';
+import 'package:portfolio/common/widgets/mobile_navigation.dart';
+import 'package:portfolio/common/widgets/resume_button.dart';
 import 'package:portfolio/location/screens/location_screen.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
-import 'package:portfolio/user/widgets/left_drawer.dart';
+import 'package:portfolio/location/widgets/left_drawer.dart';
 import 'package:portfolio/user/widgets/user_profile_menu.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
@@ -53,6 +57,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,6 +67,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         actions: [
+          if (!isMobile) ...[LinkedinButton(), GithubButton(), ResumeButton()],
           Consumer(
             builder: (context, ref, child) {
               final isLoggedIn = ref.watch(authStateProvider).value != null;
@@ -84,8 +90,9 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         ],
       ),
       drawer: LeftDrawer(onColorPickerTapped: _showColorPickerDialog),
+      bottomNavigationBar: isMobile ? const MobileNavigation() : null,
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: Consumer(
             builder: (context, ref, _) {
@@ -93,13 +100,13 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
 
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     backgroundImage: AssetImage(
                       'assets/images/Headshot-cropped-Jordan.png',
                     ),
                     radius: 120,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     'Welcome to my demo app!',
                     textAlign: TextAlign.center,
@@ -109,7 +116,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     'This is a work in progress and will be updated regularly with commonly requested features.\nAll functionality has been hand coded as a demonstration.\nFeel free to explore!',
                     textAlign: TextAlign.center,
@@ -118,7 +125,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -137,7 +144,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                           ].map((word) {
                             return RotateAnimatedText(
                               word,
-                              duration: Duration(seconds: 2),
+                              duration: const Duration(seconds: 2),
                               textStyle: theme.textTheme.headlineMedium
                                   ?.copyWith(
                                     color: theme.colorScheme.tertiary,
@@ -150,7 +157,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -159,7 +166,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                         ),
                       );
                     },
-                    child: Text('Location'),
+                    child: const Text('Location'),
                   ),
                 ],
               );
