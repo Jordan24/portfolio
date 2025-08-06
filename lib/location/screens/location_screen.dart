@@ -140,7 +140,8 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
             ),
             Text(
-              'This page demonstrates the use of GPS or Google Maps API to get a location and Google Maps API to display it.',
+              "This page demonstrates the use of the device's GPS or Google Maps API to get a location and Google Maps API to display it.",
+              textAlign: TextAlign.center,
             ),
             Center(
               child: Container(
@@ -172,6 +173,13 @@ class _LocationScreenState extends State<LocationScreen> {
                   onPressed: _selectOnMap,
                 ),
               ],
+            ),
+            const Spacer(),
+            Text(
+              'The location data is simply used to display the map and is not stored outside your device.',
+              style: theme.textTheme.bodySmall!.copyWith(
+                color: theme.colorScheme.secondary,
+              ),
             ),
           ],
         ),
