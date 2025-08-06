@@ -80,13 +80,16 @@ class WelcomeScreen extends ConsumerWidget {
                     },
                   ),
                   const SizedBox(width: 16),
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.download),
-                    label: const Text('Download Resume'),
-                    onPressed: () {
-                      final url = Uri.parse(resumeUrl);
-                      launchUrl(url, mode: LaunchMode.externalApplication);
-                    },
+                  Hero(
+                    tag: 'resume_button',
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.download),
+                      label: const Text('Download Resume'),
+                      onPressed: () {
+                        final url = Uri.parse(resumeUrl);
+                        launchUrl(url, mode: LaunchMode.externalApplication);
+                      },
+                    ),
                   ),
                 ],
               ),
