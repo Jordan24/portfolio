@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:portfolio/common/widgets/mobile_navigation.dart';
 import 'package:portfolio/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,7 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   PlaceLocation? _pickedLocation;
   var _isLoading = false;
+  bool get isMobile => MediaQuery.of(context).size.width < 600;
 
   String get locationImage {
     if (_pickedLocation == null) return '';
@@ -111,6 +113,9 @@ class _LocationScreenState extends State<LocationScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Location')),
+      bottomNavigationBar: isMobile
+          ? const MobileNavigation()
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
