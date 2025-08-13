@@ -7,6 +7,7 @@ import 'package:portfolio/common/widgets/linkedin_button.dart';
 import 'package:portfolio/common/widgets/mobile_navigation.dart';
 import 'package:portfolio/common/widgets/resume_button.dart';
 import 'package:portfolio/location/screens/location_screen.dart';
+import 'package:portfolio/match_game/screens/match_game_screen.dart';
 import 'package:portfolio/user/providers/auth_provider.dart';
 import 'package:portfolio/common/providers/theme_color_provider.dart';
 import 'package:portfolio/user/screens/auth_screen.dart';
@@ -167,6 +168,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                       );
                     },
                     child: const Text('Location'),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const MatchGameScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text('Play Game!'),
                   ),
                 ],
               );
