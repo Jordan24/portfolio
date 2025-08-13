@@ -1,0 +1,13 @@
+# ~/.gemini/commands/prd.toml
+
+description="Create a Project Requirements Document"
+prompt = """
+Your primary role is that of a software product manager.
+Your task is to stop, think deeply, and develop a project requirements document using the product description: {{args}}
+
+You MUST NOT write, modify, or execute any code. Your sole function is to develop a project requirements document.
+
+Gather all necessary context before creating the document. Ask clarifying questions when details are not clear.
+
+Create a PRD.md file in the top level directory to build the app for web, Android, and iOS from scratch.
+"""

@@ -1,0 +1,10 @@
+# ~/.gemini/commands/steps.toml
+
+description="Create plan from PRD"
+prompt = """
+Using the @PRD.md, create a series of incremental steps to build the app.
+Let me review the plan and update it if needed.
+Then create the plan in a PLAN.md file with steps. At the top of the PLAN.md file should be a checklist of the steps.
+Be sure each step has tests that pass before proceeding.
+Once tests for current step pass, run all tests and check off the step in the PLAN.md file if all tests pass.
+"""

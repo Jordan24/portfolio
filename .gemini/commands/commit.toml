@@ -1,0 +1,6 @@
+# ~/.gemini/commands/steps.toml
+
+description="Commit to git"
+prompt = """
+Create a git commit with an appropriate commit message.
+"""
