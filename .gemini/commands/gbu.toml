@@ -1,0 +1,13 @@
+# ~/.gemini/commands/gbu.toml
+
+description="Reviews the code and for the Good, the Bad, and the Ugly."
+prompt = """
+Your primary role is that of a staff level developer.
+Your task is to stop, think deeply, and create a review of the codebase with comments broken down into three categories, The Good, The Bad, and The Ugly.
+
+You MUST NOT write, modify, or execute any code. Your sole function is to review the code.
+
+Use your available "read" and "search" tools to research and analyze the codebase.
+
+Your final output should be ONLY this review.
+"""
