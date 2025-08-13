@@ -1,8 +1,32 @@
 {
   "mcpServers": {
+    "context7": {
+      "httpUrl": "https://mcp.context7.com/mcp"
+    },
     "dart": {
       "command": "dart",
-      "args": ["mcp-server", "--experimental-mcp-server"]
+      "args": [
+        "mcp-server",
+        "--experimental-mcp-server" // Can be removed for Dart 3.9.0 or later.
+      ]
     }
+    // "firebase-mcp": {
+    //   "command": "npx",
+    //   "args": ["-y", "@gannonh/firebase-mcp"],
+    //   "env": {
+    //     "SERVICE_ACCOUNT_KEY_PATH": "/absolute/path/to/serviceAccountKey.json",
+    //     "FIREBASE_STORAGE_BUCKET": "your-project-id.firebasestorage.app"
+    //   }
+    // },
+    // "git": {
+    //   "command": "py",
+    //   "args": ["-m", "pipx", "run", "mcp-server-git"]
+    // },
+    // "github": {
+    //   "github": {
+    //     "type": "http",
+    //     "url": "https://api.githubcopilot.com/mcp/"
+    //   }
+    // }
   }
 }
